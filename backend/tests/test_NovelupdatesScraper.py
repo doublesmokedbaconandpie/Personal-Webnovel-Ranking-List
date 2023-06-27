@@ -7,6 +7,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         test = NovelupdatesScraper()        
         self.assertEqual(test.tags, [])
         self.assertEqual(test.genre, [])
+        self.assertEqual(test.title, "")
         self.assertEqual(test.country, "")
         self.assertEqual(test.novel_type, "")
         
@@ -19,6 +20,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         
         self.assertEqual(test.tags, result_tags)
         self.assertEqual(test.genre, result_genre)
+        self.assertEqual(test.title, "Otonari no Tenshi-sama ni Itsu no Ma ni ka Dame Ningen ni Sareteita Ken (LN)")
         self.assertEqual(test.country, "JP")
         self.assertEqual(test.novel_type, "Light Novel")
     
@@ -27,6 +29,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         test.import_html("tests/html_files/otonari.html")
         file_tags = test.tags
         file_genre = test.genre
+        file_title = test.title
         file_country = test.country
         file_novel_type = test.novel_type
         
@@ -34,11 +37,13 @@ class TestScrapeNovelupdates(unittest.TestCase):
         test.scrape_from_url()
         web_tags = test.tags
         web_genre = test.genre
+        web_title = test.title
         web_country = test.country
         web_novel_type = test.novel_type
         
         self.assertEqual(file_tags, web_tags)
         self.assertEqual(file_genre, web_genre)
+        self.assertEqual(file_title, web_title)
         self.assertEqual(file_country, web_country)
         self.assertEqual(file_novel_type, web_novel_type)
     
@@ -51,6 +56,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         
         self.assertEqual(test.tags, result_tags)
         self.assertEqual(test.genre, result_genre)
+        self.assertEqual(test.title, "Otonari no Tenshi-sama ni Itsu no Ma ni ka Dame Ningen ni Sareteita Ken (LN)")
         self.assertEqual(test.country, "JP")
         self.assertEqual(test.novel_type, "Light Novel")
     
@@ -63,6 +69,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         
         self.assertEqual(test.tags, result_tags)
         self.assertEqual(test.genre, result_genre)
+        self.assertEqual(test.title, "Lord of the Mysteries")
         self.assertEqual(test.country, "CN")
         self.assertEqual(test.novel_type, "Web Novel")
         
@@ -75,6 +82,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         
         self.assertEqual(test.tags, result_tags)
         self.assertEqual(test.genre, result_genre)
+        self.assertEqual(test.title, "Youkoso Jitsuryoku Shijou Shugi no Kyoushitsu e")
         self.assertEqual(test.country, "JP")
         self.assertEqual(test.novel_type, "Light Novel")
 

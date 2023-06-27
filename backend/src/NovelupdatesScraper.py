@@ -13,10 +13,11 @@ class NovelupdatesScraper:
         self.url: str = ""
         self.html: str = ""
         
-        self.genre: list = []
         self.tags: list = []
-        self.novel_type: str = ""
+        self.genre: list = []
+        self.title: str = ""
         self.country: string = ""
+        self.novel_type: str = ""
     
     def scrape_from_url(self) -> None:
         """Scrapes html data from the Novelupdates novel page. Assumes that self.url already has the valid url.
@@ -44,10 +45,11 @@ class NovelupdatesScraper:
         soup = BeautifulSoup(self.html, "html.parser")    
         uncleaned_tags = soup.find_all(id = "etagme")
         self.tags = [i.getText() for i in uncleaned_tags]
-        self.novel_type = soup.find(class_ = "genre type").getText()   
-        self.country = soup.find(style = "color:#8D8D8D;").getText()[1:-1] # Gets rid of parenthesis
         genre_div = soup.find(id = "seriesgenre")
         self.genre = [i.getText() for i in genre_div.findChildren()]
+        self.title = soup.find("title").getText().replace(" - Novel Updates", "")
+        self.country = soup.find(style = "color:#8D8D8D;").getText()[1:-1] # Gets rid of parenthesis
+        self.novel_type = soup.find(class_ = "genre type").getText()   
             
     def dump_html(self, filename) -> None:
         with open(filename, 'w', encoding='utf-8', newline='') as f:
