@@ -2,7 +2,6 @@ import cloudscraper
 from bs4 import BeautifulSoup
 import string
 import os
-import difflib
 
 def dump_html(thing: string) -> None:
     with open('test.html', 'w') as f:
@@ -54,42 +53,5 @@ class NovelupdatesScraper:
         with open(filename, 'w', encoding='utf-8', newline='') as f:
             f.write(self.html)
     
-if __name__ == "__main__":
+if __name__ == "__main__":    
     pass
-    # otonari = NovelupdatesScraper()
-    # # otonari.url = "https://www.novelupdates.com/series/otonari-no-tenshi-sama-ni-itsu-no-ma-ni-ka-dame-ningen-ni-sareteita-ken-ln/"
-    # # otonari.scrape_from_url()
-    # # old = otonari.html
-    # # otonari.dump_html("otonari.html")
-    # otonari.import_html("otonari.html")
-    # # new = otonari.html
-    
-    # # print(new == old)
-    # # output_list = [li for li in difflib.ndiff(old, new) if li[0] != ' ']
-    # # print(output_list)
-    # otonari.get_info_from_html()
-    # print(otonari.tags)
-    # print(otonari.novel_type)
-    # print(otonari.country)
-    # print(otonari.genre)
-    
-    lotm = NovelupdatesScraper()
-    lotm.url = "https://www.novelupdates.com/series/lord-of-the-mysteries/"
-    lotm.scrape_from_url()
-    lotm.dump_html('lotm.html')
-    lotm.get_info_from_html()
-    print(lotm.tags)
-    # print(lotm.novel_type)
-    # print(lotm.country)
-    print(lotm.genre)
-    
-    youkoso = NovelupdatesScraper()
-    youkoso.url = "https://www.novelupdates.com/series/youkoso-jitsuryoku-shijou-shugi-no-kyoushitsu-e/"
-    youkoso.scrape_from_url()
-    youkoso.dump_html("youkoso.html")
-    # youkoso.import_html('../tests/otonari.html')
-    youkoso.get_info_from_html()
-    print(youkoso.tags)
-    # # print(youkoso.novel_type)
-    # # print(youkoso.country)
-    print(youkoso.genre)
