@@ -24,6 +24,7 @@ class NovelupdatesScraper:
         """
         scraper = cloudscraper.create_scraper(delay = 6)
         self.html = scraper.get(self.url).text
+        self.get_info_from_html()
         
     def import_html(self, filename: str) -> bool:
         """ 
@@ -36,6 +37,7 @@ class NovelupdatesScraper:
         if os.path.isfile(filename):
             with open(filename, 'r', encoding= 'utf-8', newline='') as f:
                 self.html = f.read()
+            self.get_info_from_html()
             return True
         return False
             
