@@ -1,6 +1,5 @@
 import unittest
 from src.NovelupdatesScraper import NovelupdatesScraper
-import difflib
 
 class TestDefault(unittest.TestCase):
     def test_default(self):
@@ -10,6 +9,26 @@ class TestDefault(unittest.TestCase):
         self.assertEqual(test.title, "")
         self.assertEqual(test.country, "")
         self.assertEqual(test.novel_type, "")
+    
+    def test_invalid_url(self):
+        test = NovelupdatesScraper(url = "akjsdhfjkahsdf")
+        url_success = test.scrape_from_url()
+        self.assertEqual(url_success, False)
+        
+    def test_not_novelupdates(self):
+        test = NovelupdatesScraper(url = "https://www.w3schools.com/python/python_try_except.asp")
+        url_success = test.scrape_from_url()
+        self.assertEqual(url_success, False)
+    
+    def test_not_series_novelupdates(self):
+        test = NovelupdatesScraper(url = "https://www.novelupdates.com/group/the-sun-is-cold-translations/")
+        url_success = test.scrape_from_url()
+        self.assertEqual(url_success, False)
+        
+    def test_invalid_html(self):
+        test = NovelupdatesScraper()
+        file_success = test.import_html("tests/html_files/invalidhtml.testhtml")
+        self.assertEqual(file_success, False)
 
 class TestScrapeNovelupdates(unittest.TestCase):
     def test_otonari_file_vs_otonari_web(self):
@@ -22,7 +41,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         file_novel_type = test.novel_type
         
         test.url = "https://www.novelupdates.com/series/otonari-no-tenshi-sama-ni-itsu-no-ma-ni-ka-dame-ningen-ni-sareteita-ken-ln/"
-        test.scrape_from_url()
+        scrape_success = test.scrape_from_url()
         web_tags = test.tags
         web_genre = test.genre
         web_title = test.title
@@ -30,6 +49,7 @@ class TestScrapeNovelupdates(unittest.TestCase):
         web_novel_type = test.novel_type
         
         self.assertEqual(import_success, True)
+        self.assertEqual(scrape_success, True)
         self.assertEqual(file_tags, web_tags)
         self.assertEqual(file_genre, web_genre)
         self.assertEqual(file_title, web_title)
