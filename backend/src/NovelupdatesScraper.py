@@ -1,9 +1,9 @@
+import os
+import string
+from dataclasses import dataclass, field
 import cloudscraper
 import requests
 from bs4 import BeautifulSoup
-from dataclasses import dataclass, field
-import string
-import os
 
 @dataclass(init=True, repr=True)
 class NovelupdatesScraper:
