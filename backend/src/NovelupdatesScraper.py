@@ -30,9 +30,7 @@ class NovelupdatesScraper:
             self.html = scraper.get(self.url).text
         except requests.exceptions.MissingSchema:
             return False
-        if not self.get_info_from_html():
-            return False
-        return True
+        return self.get_info_from_html()
         
     def import_html(self, filename: str) -> bool:
         """ 
@@ -42,13 +40,12 @@ class NovelupdatesScraper:
         Returns:
             bool: Whether the file was found and info scraping succeeded
         """
-        if os.path.isfile(filename):
-            with open(filename, 'r', encoding= 'utf-8', newline='') as f:
-                self.html = f.read()
-            if not self.get_info_from_html():
-                return False
-            return True
-        return False
+        if not os.path.isfile(filename):
+            return False
+        with open(filename, 'r', encoding= 'utf-8', newline='') as f:
+            self.html = f.read()
+        return self.get_info_from_html()
+        
             
     def get_info_from_html(self) -> bool:
         """Assumes that self.html already has html content from a Novelupdates novel page; grabs different novel data values
