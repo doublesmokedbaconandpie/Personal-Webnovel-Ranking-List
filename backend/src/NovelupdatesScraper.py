@@ -1,7 +1,6 @@
 import cloudscraper
 from bs4 import BeautifulSoup
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 import string
 import os
 
