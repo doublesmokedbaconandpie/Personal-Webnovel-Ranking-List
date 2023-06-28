@@ -1,6 +1,7 @@
 import os
 import string
 from dataclasses import dataclass, field
+
 import cloudscraper
 import requests
 from bs4 import BeautifulSoup
