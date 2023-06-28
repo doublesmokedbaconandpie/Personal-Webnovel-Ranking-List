@@ -18,6 +18,9 @@ class NovelupdatesScraper:
     
     def scrape_from_url(self) -> bool:
         """Scrapes html data from the Novelupdates novel page. Assumes that self.url already has the valid url.
+
+        Returns:
+            bool: Whether scraping data from the url succeeded
         """
         if "https://www.novelupdates.com/series/" not in self.url:
             return False
@@ -36,7 +39,7 @@ class NovelupdatesScraper:
             filename (str): A valid Novelupdates novel page html file
 
         Returns:
-            bool: Whether the file was found
+            bool: Whether the file was found and info scraping succeeded
         """
         if os.path.isfile(filename):
             with open(filename, 'r', encoding= 'utf-8', newline='') as f:
@@ -47,7 +50,10 @@ class NovelupdatesScraper:
         return False
             
     def get_info_from_html(self) -> bool:
-        """Assumes that self.html already has html content from a Novelupdates novel page
+        """Assumes that self.html already has html content from a Novelupdates novel page; grabs different novel data values
+
+        Returns:
+            bool: Whether scraping html data values succeeded
         """
         try:
             soup = BeautifulSoup(self.html, "html.parser")    
