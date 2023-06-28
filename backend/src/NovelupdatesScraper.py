@@ -1,23 +1,20 @@
 import cloudscraper
 from bs4 import BeautifulSoup
+from dataclasses import dataclass
+from dataclasses import field
 import string
 import os
 
-def dump_html(thing: string) -> None:
-    with open('test.html', 'w') as f:
-        f.write(thing)
-
+@dataclass(init=True, repr=True)
 class NovelupdatesScraper:
-    def __init__(self) -> None:
-        self.title: str = ""
-        self.url: str = ""
-        self.html: str = ""
-        
-        self.tags: list = []
-        self.genre: list = []
-        self.title: str = ""
-        self.country: string = ""
-        self.novel_type: str = ""
+    title: str = ""
+    url: str = ""
+    html: str = ""
+    tags: list = field(default_factory=list)
+    genre: list = field(default_factory=list)
+    title: str = ""
+    country: string = ""
+    novel_type: str = ""
     
     def scrape_from_url(self) -> None:
         """Scrapes html data from the Novelupdates novel page. Assumes that self.url already has the valid url.
