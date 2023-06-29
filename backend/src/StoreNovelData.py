@@ -103,10 +103,10 @@ class StoreNovelData:
             bool: Whether the url was successfully deleted from the table
         """
         
-        if not self.exists_url_entry(url) or not self.table:
+        if not self.exists_url_entry(url) or not self.table_name:
             return False
         
-        command_string = f"DELETE FROM {self.table} WHERE url='{url}'"
+        command_string = f"DELETE FROM {self.table_name} WHERE url='{url}'"
         self.cursor.execute(command_string)
         self.conn.commit()
         return True
