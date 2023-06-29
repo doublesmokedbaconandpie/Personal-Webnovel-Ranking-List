@@ -1,8 +1,11 @@
 import unittest
 import os
+import shutil
 import datetime
 
 from src.StoreNovelData import StoreNovelData
+
+ORIGIN_DB = 'tests/db_files/ISSTH.db'
 
 class TestTable(unittest.TestCase):
     def test_empty_table(self):
@@ -14,7 +17,6 @@ class TestTable(unittest.TestCase):
         self.assertTrue(created)
         self.assertTrue(selected)
         self.assertEqual(contents, [])
-        os.remove('test_empty_table.db')
         
     def test_invalid_table(self):
         test = StoreNovelData('test_invalid_table.db')
@@ -25,7 +27,12 @@ class TestTable(unittest.TestCase):
         self.assertTrue(created)
         self.assertFalse(selected)
         self.assertIsNone(contents)
-        os.remove('test_invalid_table.db')
+    
+    @classmethod
+    def tearDownClass(self) -> None:
+        dbNames = ['test_empty_table.db', 'test_invalid_table.db']
+        for db in dbNames:
+            os.remove(db)
 
 class TestInsertDeleteFetch(unittest.TestCase):        
     def setUp(self):
@@ -44,11 +51,21 @@ class TestInsertDeleteFetch(unittest.TestCase):
         
         self.assertTrue(added)
         self.assertEqual(contents, self.result)
-        os.remove('test_insert_url.db')
+    
+    def test_insert_url_duplicate(self):
+        shutil.copy(ORIGIN_DB, 'test_insert_url_duplicate.db')
+        test = StoreNovelData('test_insert_url_duplicate.db')
+        test.select_table('test')
+        
+        added = test.add_entry_from_url(url = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/")
+        contents = test.dump_table_to_list()
+        
+        self.assertFalse(added)
+        self.assertEqual(contents, self.result)
     
     def test_fetch_valid_entry(self):
+        shutil.copy(ORIGIN_DB, 'test_fetch_valid_entry.db')
         test = StoreNovelData('test_fetch_valid_entry.db')
-        test.create_table('test')
         test.select_table('test')
         
         url = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
@@ -56,11 +73,10 @@ class TestInsertDeleteFetch(unittest.TestCase):
         fetched_contents = test.fetch_url_entry(url)
         
         self.assertEqual(fetched_contents, self.result)
-        os.remove('test_fetch_valid_entry.db')
     
     def test_fetch_invalid_entry(self):
+        shutil.copy(ORIGIN_DB, 'test_fetch_invalid_entry.db')
         test = StoreNovelData('test_fetch_invalid_entry.db')
-        test.create_table('test')
         test.select_table('test')
         
         url_add = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
@@ -69,11 +85,10 @@ class TestInsertDeleteFetch(unittest.TestCase):
         fetched_contents = test.fetch_url_entry(url_fetch)
         
         self.assertEqual(fetched_contents, None)
-        os.remove('test_fetch_invalid_entry.db')
     
     def test_delete_valid_entry(self):
+        shutil.copy(ORIGIN_DB, 'test_delete_valid_entry.db')
         test = StoreNovelData('test_delete_valid_entry.db')
-        test.create_table('test')
         test.select_table('test')
         
         url = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
@@ -83,11 +98,10 @@ class TestInsertDeleteFetch(unittest.TestCase):
 
         self.assertTrue(deleted)
         self.assertEqual(after_delete, [])
-        os.remove('test_delete_valid_entry.db')   
         
     def test_delete_invalid_entry(self):
+        shutil.copy(ORIGIN_DB, 'test_delete_invalid_entry.db')
         test = StoreNovelData('test_delete_invalid_entry.db')
-        test.create_table('test')
         test.select_table('test')
         
         url_add = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
@@ -99,8 +113,14 @@ class TestInsertDeleteFetch(unittest.TestCase):
         
         self.assertEqual(deleted, False)
         self.assertEqual(after_delete, self.result)
-        os.remove('test_delete_invalid_entry.db')
-
+    
+    @classmethod
+    def tearDownClass(self) -> None:
+        files = os.listdir()
+        prefixes = ('test_insert', 'test_fetch', 'test_delete')
+        for file in files:
+            if any(pre in file[:11] for pre in prefixes) and file[-3:] == '.db':
+                os.remove(file)
 
 if __name__ == "__main__":
     files = os.listdir()
@@ -108,3 +128,5 @@ if __name__ == "__main__":
         if file[:4] == 'test' and file[-3:] == '.db':
             os.remove(file)
     unittest.main()
+    
+    
