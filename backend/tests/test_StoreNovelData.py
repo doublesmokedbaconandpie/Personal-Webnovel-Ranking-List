@@ -260,8 +260,8 @@ class TestUpdateEntry(unittest.TestCase):
             None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), 'I have not read this yet lmao ')]
-        shutil.copy(ORIGIN_DB, 'test_delete_invalid_entry.db')
-        test = StoreNovelData('test_delete_invalid_entry.db')
+        shutil.copy(ORIGIN_DB, 'test_update_notes.db')
+        test = StoreNovelData('test_update_notes.db')
         test.select_table('test')
         
         updated = test.update_entry(ORIGIN_URL, 'Notes', "I have not read this yet lmao ")
