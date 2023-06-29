@@ -11,8 +11,8 @@ class TestTable(unittest.TestCase):
         selected = test.select_table('test')
         contents = test.dump_table_to_list()
         
-        self.assertEqual(created, True)
-        self.assertEqual(selected, True)
+        self.assertTrue(created)
+        self.assertTrue(selected)
         self.assertEqual(contents, [])
         os.remove('test_empty_table.db')
         
@@ -22,9 +22,9 @@ class TestTable(unittest.TestCase):
         selected = test.select_table('aslkdfjalsdf')
         contents = test.dump_table_to_list()
         
-        self.assertEqual(created, True)
-        self.assertEqual(selected, False)
-        self.assertEqual(contents, None)
+        self.assertTrue(created)
+        self.assertFalse(selected)
+        self.assertIsNone(contents)
         os.remove('test_invalid_table.db')
 
 class TestInsertDeleteFetch(unittest.TestCase):        
@@ -42,7 +42,7 @@ class TestInsertDeleteFetch(unittest.TestCase):
         added = test.add_entry_from_url(url = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/")
         contents = test.dump_table_to_list()
         
-        self.assertEqual(added, True)
+        self.assertTrue(added)
         self.assertEqual(contents, self.result)
         os.remove('test_insert_url.db')
     
@@ -81,7 +81,7 @@ class TestInsertDeleteFetch(unittest.TestCase):
         deleted = test.delete_url(url)
         after_delete = test.dump_table_to_list()
 
-        self.assertEqual(deleted, True)
+        self.assertTrue(deleted)
         self.assertEqual(after_delete, [])
         os.remove('test_delete_valid_entry.db')   
         

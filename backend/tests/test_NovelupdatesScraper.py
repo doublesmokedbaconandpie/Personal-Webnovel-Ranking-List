@@ -20,22 +20,22 @@ class TestInvalidUrlHtml(unittest.TestCase):
     def test_invalid_url(self):
         test = NovelupdatesScraper(url = "akjsdhfjkahsdf")
         url_success = test.scrape_from_url()
-        self.assertEqual(url_success, False)
+        self.assertFalse(url_success)
         
     def test_not_novelupdates(self):
         test = NovelupdatesScraper(url = "https://www.w3schools.com/python/python_try_except.asp")
         url_success = test.scrape_from_url()
-        self.assertEqual(url_success, False)
+        self.assertFalse(url_success)
     
     def test_not_series_novelupdates(self):
         test = NovelupdatesScraper(url = "https://www.novelupdates.com/group/the-sun-is-cold-translations/")
         url_success = test.scrape_from_url()
-        self.assertEqual(url_success, False)
+        self.assertFalse(url_success)
         
     def test_invalid_html(self):
         test = NovelupdatesScraper()
         file_success = test.import_html("tests/html_files/invalidhtml.testhtml")
-        self.assertEqual(file_success, False)
+        self.assertFalse(file_success)
 
 class TestOtonari(unittest.TestCase):
     def setUp(self) -> None:
@@ -60,9 +60,9 @@ class TestOtonari(unittest.TestCase):
         self.assertEqual(self.file.novel_type, "Light Novel")
     
     def test_import_success(self):
-        self.assertEqual(self.import_success, True)
+        self.assertTrue(self.import_success)
     def test_scrape_success(self):
-        self.assertEqual(self.scrape_success, True)
+        self.assertTrue(self.scrape_success)
     def test_tags_web_vs_html(self):
         self.assertEqual(self.file.tags, self.url.tags)
     def test_genre_web_vs_html(self):
