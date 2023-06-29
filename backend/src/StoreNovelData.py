@@ -54,6 +54,24 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
+    def delete_table(self, table_name: str) -> bool:
+        """Deletes a table from the DB
+
+        Args:
+            table_name (str): table name to be deleted
+
+        Returns:
+            bool: whether a table was deleted or not
+        """
+        if not self.table_exists(table_name):
+            return False
+        
+        self.cursor.execute(f"DROP TABLE {table_name}")
+        if self.table_name == table_name:
+            self.table = ""
+        self.conn.commit()
+        return True
+    
     def exists_url_entry(self, url: str) -> bool:
         """Returns if a url's row exists in a specific table
 

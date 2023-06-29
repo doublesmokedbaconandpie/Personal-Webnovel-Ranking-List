@@ -7,6 +7,12 @@ from src.StoreNovelData import StoreNovelData
 
 ORIGIN_DB = 'tests/db_files/ISSTH.db'
 ORIGIN_URL = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
+origin = StoreNovelData(ORIGIN_DB)
+origin.delete_table('test')
+origin.create_table('test')
+origin.select_table('test')
+origin.add_entry_from_url(ORIGIN_URL)
+origin.dump_table_to_list()
 
 class TestTable(unittest.TestCase):
     def test_empty_table(self):
