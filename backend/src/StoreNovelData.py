@@ -90,7 +90,7 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
-    def delete_url(self, url: str) -> bool:
+    def delete_entry_from_url(self, url: str) -> bool:
         """Deletes a url from a table
 
         Args:
@@ -108,7 +108,7 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
-    def fetch_url_entry(self, url: str) -> list:
+    def fetch_entry_from_url(self, url: str) -> list:
         """Returns 
 
         Args:
@@ -123,10 +123,25 @@ class StoreNovelData:
         return self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Url = ?", params).fetchall()
     
     def update_entry(self, curr_url: str, column: str, val) -> bool:
+        """
+
+        Args:
+            curr_url (str): Valid url entry in table
+            column (str): Valid column in table
+            val (str, int): Replacing value (assuming if valid)
+
+        Returns:
+            bool: Whether updating was successful
+        """
+        
+        # Note there is no type checking
         valid_columns = ('Url', 'Country', 'Title', 'ChaptersCompleted', 'Rating', 
                          'ReadingStatus', 'Genre', 'Tags', 'DateModified', 'Notes')
         if column not in valid_columns or not self.exists_url_entry(curr_url):
             return False
+        
+        params = (val, curr_url)
+        self.cursor.execute(f"UPDATE {self.table_name} SET {column}= ? WHERE url= ?", params)
         self.conn.commit()
         return True
     
@@ -147,4 +162,6 @@ class StoreNovelData:
         return (table_name,) in tables   
         
 if __name__ == "__main__":
-    pass
+    a = "test_delete_invalid_entry.db"
+    print(bool("test_delete" in a[:11]))
+    print(bool(".db" == a[-3:]))
