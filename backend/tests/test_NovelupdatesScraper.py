@@ -1,5 +1,5 @@
 import unittest
-from src.NovelupdatesScraper import NovelupdatesScraper
+from NovelupdatesScraper import NovelupdatesScraper
 
 class TestDefault(unittest.TestCase):
     def setUp(self):

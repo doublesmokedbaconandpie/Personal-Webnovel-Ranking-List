@@ -1,7 +1,6 @@
 import sqlite3
 from datetime import date
-from src.NovelupdatesScraper import NovelupdatesScraper
-# from NovelupdatesScraper import NovelupdatesScraper
+from NovelupdatesScraper import NovelupdatesScraper
 
 class StoreNovelData:
     def __init__(self, DBname: str) -> None:

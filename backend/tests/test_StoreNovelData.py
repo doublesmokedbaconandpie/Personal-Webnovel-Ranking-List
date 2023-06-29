@@ -3,7 +3,7 @@ import os
 import shutil
 import datetime
 
-from src.StoreNovelData import StoreNovelData
+from StoreNovelData import StoreNovelData
 
 ORIGIN_DB = 'tests/db_files/ISSTH.db'
 ORIGIN_URL = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
