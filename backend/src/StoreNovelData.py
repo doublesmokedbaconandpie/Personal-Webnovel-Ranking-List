@@ -109,7 +109,11 @@ class StoreNovelData:
         return True
     
     def fetch_url_entry(self, url: str):
-        pass
+        # if not self.exists_url_entry(url) or not self.table_name:
+        #     return None
+        
+        params = (url, )
+        return self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Url = ?", params).fetchall()
     
     def update_entry(self, curr_url: str, column: str, val) -> bool:
         valid_columns = ('Url', 'Country', 'Title', 'ChaptersCompleted', 'Rating', 
