@@ -46,8 +46,8 @@ class TestInsertDeleteFetch(unittest.TestCase):
         self.assertEqual(contents, self.result)
         os.remove('test_insert_url.db')
     
-    def test_fetch_url(self):
-        test = StoreNovelData('test_fetch_url.db')
+    def test_fetch_valid_entry(self):
+        test = StoreNovelData('test_fetch_valid_entry.db')
         test.create_table('test')
         test.select_table('test')
         
@@ -56,10 +56,37 @@ class TestInsertDeleteFetch(unittest.TestCase):
         fetched_contents = test.fetch_url_entry(url)
         
         self.assertEqual(fetched_contents, self.result)
-        os.remove('test_fetch_url.db')
+        os.remove('test_fetch_valid_entry.db')
     
-    def test_delete_nonexisting_entry(self):
-        test = StoreNovelData('test_delete_nonexisting_entry.db')
+    def test_fetch_invalid_entry(self):
+        test = StoreNovelData('test_fetch_invalid_entry.db')
+        test.create_table('test')
+        test.select_table('test')
+        
+        url_add = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
+        url_fetch = "https://www.novelupdates.com/series/reverend-insanity/"
+        test.add_entry_from_url(url_add)
+        fetched_contents = test.fetch_url_entry(url_fetch)
+        
+        self.assertEqual(fetched_contents, None)
+        os.remove('test_fetch_invalid_entry.db')
+    
+    def test_delete_valid_entry(self):
+        test = StoreNovelData('test_delete_valid_entry.db')
+        test.create_table('test')
+        test.select_table('test')
+        
+        url = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
+        test.add_entry_from_url(url)
+        deleted = test.delete_url(url)
+        after_delete = test.dump_table_to_list()
+
+        self.assertEqual(deleted, True)
+        self.assertEqual(after_delete, [])
+        os.remove('test_delete_valid_entry.db')   
+        
+    def test_delete_invalid_entry(self):
+        test = StoreNovelData('test_delete_invalid_entry.db')
         test.create_table('test')
         test.select_table('test')
         
@@ -72,21 +99,7 @@ class TestInsertDeleteFetch(unittest.TestCase):
         
         self.assertEqual(deleted, False)
         self.assertEqual(after_delete, self.result)
-        os.remove('test_delete_nonexisting_entry.db')
-    
-    def test_delete_existing_entry(self):
-        test = StoreNovelData('test_delete_existing_entry.db')
-        test.create_table('test')
-        test.select_table('test')
-        
-        url = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
-        test.add_entry_from_url(url)
-        deleted = test.delete_url(url)
-        after_delete = test.dump_table_to_list()
-
-        self.assertEqual(deleted, True)
-        self.assertEqual(after_delete, [])
-        os.remove('test_delete_existing_entry.db')   
+        os.remove('test_delete_invalid_entry.db')
 
 
 if __name__ == "__main__":

@@ -108,10 +108,17 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
-    def fetch_url_entry(self, url: str):
-        # if not self.exists_url_entry(url) or not self.table_name:
-        #     return None
-        
+    def fetch_url_entry(self, url: str) -> list:
+        """Returns 
+
+        Args:
+            url (str):
+
+        Returns:
+            list: [(Tuple of column data entries)], None if not found
+        """
+        if not self.exists_url_entry(url) or not self.table_name:
+            return None
         params = (url, )
         return self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Url = ?", params).fetchall()
     
