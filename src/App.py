@@ -15,10 +15,10 @@ def index():
     contents = db.dump_table_to_list()
     entries = []
     for i, entry in enumerate(contents):
-        tmp = NovelEntry(number = str(i) + '.',
+        tmp = NovelEntry(number = str(i + 1) + '.',
                          country = entry[1],
-                         title = entry[0],
-                         url = entry[2],
+                         title = entry[2],
+                         url = entry[0],
                          chapters_completed = entry[3],
                          rating = entry[4],
                          reading_status = entry[5],
