@@ -44,19 +44,16 @@ class TestTable(unittest.TestCase):
 class TestInsertDeleteFetch(unittest.TestCase):        
     def setUp(self):
         self.expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         
     def test_insert_url(self):
+        shutil.copy(ORIGIN_DB, 'test_insert_url.db')
         test = StoreNovelData('test_insert_url.db')
-        test.create_table('test')
         test.select_table('test')
-        
-        added = test.add_entry_from_url(ORIGIN_URL)
         contents = test.dump_table_to_list()
         
-        self.assertTrue(added)
         self.assertEqual(contents, self.expected_entry)
     
     def test_insert_url_duplicate(self):
@@ -75,7 +72,6 @@ class TestInsertDeleteFetch(unittest.TestCase):
         test = StoreNovelData('test_fetch_valid_entry.db')
         test.select_table('test')
         
-        test.add_entry_from_url(ORIGIN_URL)
         fetched_contents = test.fetch_entry_from_url(ORIGIN_URL)
         
         self.assertEqual(fetched_contents, self.expected_entry)
@@ -86,7 +82,6 @@ class TestInsertDeleteFetch(unittest.TestCase):
         test.select_table('test')
         
         url_fetch = "https://www.novelupdates.com/series/reverend-insanity/"
-        test.add_entry_from_url(ORIGIN_URL)
         fetched_contents = test.fetch_entry_from_url(url_fetch)
         
         self.assertEqual(fetched_contents, None)
@@ -96,7 +91,6 @@ class TestInsertDeleteFetch(unittest.TestCase):
         test = StoreNovelData('test_delete_valid_entry.db')
         test.select_table('test')
         
-        test.add_entry_from_url(ORIGIN_URL)
         deleted = test.delete_entry_from_url(ORIGIN_URL)
         after_delete = test.dump_table_to_list()
 
@@ -110,7 +104,6 @@ class TestInsertDeleteFetch(unittest.TestCase):
         
         url_delete = "https://www.novelupdates.com/series/reverend-insanity/"
         
-        test.add_entry_from_url(ORIGIN_URL)
         deleted = test.delete_entry_from_url(url_delete)
         after_delete = test.dump_table_to_list()
         
@@ -128,7 +121,7 @@ class TestInsertDeleteFetch(unittest.TestCase):
 class TestUpdateEntry(unittest.TestCase):
     def test_update_url(self):
         expected_entry = [('https://www.novelupdates.com/series/reverend-insanity/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_url.db')
@@ -143,7 +136,7 @@ class TestUpdateEntry(unittest.TestCase):
         
     def test_update_country(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'JP', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_country.db')
@@ -158,7 +151,7 @@ class TestUpdateEntry(unittest.TestCase):
          
     def test_update_title(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'Reverend Insanity', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_title.db')
@@ -173,7 +166,7 @@ class TestUpdateEntry(unittest.TestCase):
              
     def test_update_chapters_completed(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '150', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_chapters_completed.db')
@@ -188,14 +181,14 @@ class TestUpdateEntry(unittest.TestCase):
                  
     def test_update_rating(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            7, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '7', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_rating.db')
         test = StoreNovelData('test_update_rating.db')
         test.select_table('test')
         
-        updated = test.update_entry(ORIGIN_URL, 'Rating', 7)
+        updated = test.update_entry(ORIGIN_URL, 'Rating', '7')
         entry = test.fetch_entry_from_url(ORIGIN_URL)
 
         self.assertTrue(updated)
@@ -203,7 +196,7 @@ class TestUpdateEntry(unittest.TestCase):
                  
     def test_update_reading_status(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, 'No', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', 'No', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_reading_status.db')
@@ -218,7 +211,7 @@ class TestUpdateEntry(unittest.TestCase):
                  
     def test_update_genre(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia, Fantasy']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia, Fantasy']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_genre.db')
@@ -233,7 +226,7 @@ class TestUpdateEntry(unittest.TestCase):
                     
     def test_update_tags(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['TestTag', 'Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), '')]
         shutil.copy(ORIGIN_DB, 'test_update_tags.db')
@@ -248,7 +241,7 @@ class TestUpdateEntry(unittest.TestCase):
                    
     def test_update_date_modified(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             "2001-10-10", '')]
         shutil.copy(ORIGIN_DB, 'test_update_date_modified.db')
@@ -263,7 +256,7 @@ class TestUpdateEntry(unittest.TestCase):
                  
     def test_update_notes(self):
         expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
-            None, '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
+            '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
             datetime.date.today().strftime("%Y-%m-%d"), 'I have not read this yet lmao ')]
         shutil.copy(ORIGIN_DB, 'test_update_notes.db')
