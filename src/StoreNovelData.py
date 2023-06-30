@@ -1,5 +1,6 @@
 import sqlite3
 from datetime import date
+
 from NovelupdatesScraper import NovelupdatesScraper
 
 class StoreNovelData:
@@ -48,7 +49,7 @@ class StoreNovelData:
         if self.table_exists(table_name):
             return False
         self.cursor.execute(f'''CREATE TABLE {table_name} (
-            Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
+            Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating TEXT,
             ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)''')
         self.conn.commit()
         return True
@@ -102,7 +103,7 @@ class StoreNovelData:
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
-        params = (url, novel.country, novel.title, '', None, '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '')
+        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '')
         self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?)", params)
         self.conn.commit()
         return True
