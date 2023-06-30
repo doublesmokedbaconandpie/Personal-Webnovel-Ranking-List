@@ -29,16 +29,19 @@
             <tbody>
                 {% for entry in entries%}
                 <tr>
-                    <td><div class = "scrollable">{{entry.number}}</div></td>
-                    <td><div class = "scrollable">{{entry.country}}</div></td>
-                    <td><div class = "scrollable"><a href="{{entry.url}}">{{entry.title}}</a></div></td>
-                    <td><div class = "scrollable">{{entry.chapters_completed}}</div></td>
-                    <td><div class = "scrollable">{{entry.rating}}</div></td>
-                    <td><div class = "scrollable">{{entry.reading_status}}</div></td>
-                    <td><div class = "scrollable">{{entry.genre}}</div></td>
-                    <td><div class = "scrollable">{{entry.tags}}</div></td>
-                    <td><div class = "scrollable">{{entry.date_modified}}</div></td>
-                    <td><div class = "scrollable">{{entry.notes}}</div></td>
+                    <td contenteditable class = "col0"><div class = "scrollable">{{entry.number}}</div></td>
+                    <td contenteditable class = "col1"><div class = "scrollable">{{entry.country}}</div></td>
+                    <td class = "col2">
+                        <div contenteditable class = "scrollable"><a href="{{entry.url}}">{{entry.title}}</a></div>
+                        <div class = "col2dropdown"><a href="{{entry.url}}">{{entry.title}}</a></div>
+                    </td>
+                    <td contenteditable class = "col3"><div class = "scrollable">{{entry.chapters_completed}}</div></td>
+                    <td contenteditable class = "col4"><div class = "scrollable">{{entry.rating}}</div></td>
+                    <td contenteditable class = "col5"><div class = "scrollable">{{entry.reading_status}}</div></td>
+                    <td contenteditable class = "col6"><div class = "scrollable">{{entry.genre}}</div></td>
+                    <td contenteditable class = "col7"><div class = "scrollable">{{entry.tags}}</div></td>
+                    <td class = "col8"><div class = "scrollable">{{entry.date_modified}}</div></td>
+                    <td contenteditable class = "col9"><div class = "scrollable">{{entry.notes}}</div></td>
                 </tr>
                 {% endfor %}
             </tbody>
