@@ -179,6 +179,4 @@ class StoreNovelData:
         return (table_name,) in tables   
         
 if __name__ == "__main__":
-    a = "test_delete_invalid_entry.db"
-    print(bool("test_delete" in a[:11]))
-    print(bool(".db" == a[-3:]))
+    pass
