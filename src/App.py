@@ -13,4 +13,4 @@ def index():
     entries = db.dump_table_to_list()
     entries = [(f'{str(i + 1)}.',) + j for i, j in enumerate(entries)] # add numbering to first col
     
-    return render_template('index.html', title_name = table_name ,entries = entries)
+    return render_template('index.html', title_name = table_name, entries = entries)

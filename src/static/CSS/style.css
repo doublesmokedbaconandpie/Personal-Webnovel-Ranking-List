@@ -5,9 +5,18 @@ body {
 }
 
 table {
-    width: 80%;
+    width: 90%;
     border: solid 2px black;
     padding: 15px;
     table-layout: fixed;
     text-align: left;
 }
+
+div.scrollable {
+    width: 100%;
+    max-height: 100px;
+    border: solid 1px black;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+} 
