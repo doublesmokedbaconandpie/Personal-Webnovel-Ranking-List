@@ -4,7 +4,7 @@ addRow.addEventListener("click", addRowClick);
 
 function addRowClick() {
     var table = document.getElementById("NovelTable");
-    console.log(table);
+    if (checkLastRowEmpty(table)) {return;}
     row = table.insertRow(table.rows.length);
     for (let i = 0; i < table.rows[0].cells.length; i++) {
         if (i == 0) {
@@ -13,8 +13,7 @@ function addRowClick() {
         }
         if (i == 2) {
             createCell(row.insertCell(i), "", 'col2', false);
-            let cell = row.cells[2];
-            let div1 = cell.childNodes[0];
+            let div1 = row.cells[2].childNodes[0];
             div1.setAttribute("contenteditable", true);
             continue;
         }
@@ -39,3 +38,13 @@ function createCell(cell, text, class_name, content_editable) {
     cell.appendChild(div);
 }
 
+function checkLastRowEmpty(table){
+    var last_row = table.rows[table.rows.length - 1];
+    for (let i = 1; i < last_row.cells.length; i++) {
+        let inner_div = last_row.cells[i].childNodes[0];
+        if (inner_div.innerHTML != "") {
+            return false;
+        }
+    }
+    return true;
+}
