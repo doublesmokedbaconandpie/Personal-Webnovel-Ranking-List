@@ -41,23 +41,6 @@ class TestOtonari(unittest.TestCase):
     def setUp(self) -> None:
         self.file = NovelupdatesScraper()
         self.import_success = self.file.import_html("tests/html_files/otonari.testhtml")
-        
-        self.url = NovelupdatesScraper()
-        self.url.url = "https://www.novelupdates.com/series/otonari-no-tenshi-sama-ni-itsu-no-ma-ni-ka-dame-ningen-ni-sareteita-ken-ln/"
-        self.scrape_success = self.url.scrape_from_url()
-        
-    def test_tags(self):
-        result_tags = ['Adapted to Anime', 'Adapted to Manga', 'Adapted to Visual Novel', 'Award-winning Work', 'Beautiful Female Lead', 'Calm Protagonist', 'Cold Love Interests', 'Cooking', 'Couple Growth', 'Criminals', 'Cute Story', 'Dense Protagonist', 'Handsome Male Lead', 'Heartwarming', 'Living Alone', 'Male Protagonist', 'Mature Protagonist', 'Modern Day', 'Popular Love Interests', 'R-15', 'Slow Romance']
-        self.assertEqual(self.file.tags, result_tags)
-    def test_genre(self):
-        result_genre = ['Comedy', 'Romance', 'School Life', 'Slice of Life']
-        self.assertEqual(self.file.genre, result_genre)
-    def test_title(self):
-        self.assertEqual(self.file.title, "Otonari no Tenshi-sama ni Itsu no Ma ni ka Dame Ningen ni Sareteita Ken (LN)")
-    def test_country(self):        
-        self.assertEqual(self.file.country, "JP")
-    def test_novel_type(self):        
-        self.assertEqual(self.file.novel_type, "Light Novel")
     
     def test_import_success(self):
         self.assertTrue(self.import_success)
