@@ -9,14 +9,49 @@ table {
     border: solid 2px black;
     padding: 15px;
     table-layout: fixed;
-    text-align: left;
+    text-align: center;
 }
 
 div.scrollable {
-    width: 100%;
-    max-height: 100px;
-    border: solid 1px black;
-    margin: 0;
-    padding: 0;
+    height: 80px;
     overflow: auto;
 } 
+
+#addRow {
+    border: 0;
+    line-height: 2.5;
+    padding: 0 20px;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    text-shadow: 1px 1px 1px #000;
+    border-radius: 10px;
+    background-color: rgba(220, 0, 0, 1);
+    background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
+    box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Dropdown Content (Hidden by Default) */
+.col2dropdown {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 0;
+}
+
+/* Links inside the dropdown */
+.col2dropdown a{
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+  }
+
+
+.col2:hover .col2dropdown {
+    /* box-shadow: inset #54b3d6; */
+    color: white;
+    display: block;
+}
