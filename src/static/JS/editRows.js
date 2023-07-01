@@ -1,7 +1,5 @@
 document.getElementById("addRow")
         .addEventListener("click", addRowClick);
-document.querySelectorAll('td')
-        .forEach(e => e.addEventListener('keydown', editCell));
 
 function addRowClick() {
     var table = document.getElementById("NovelTable");
@@ -43,11 +41,4 @@ function checkLastRowEmpty(table){
         }
     }
     return true;
-}
-
-function editCell(evt){
-    if (evt.key === "Enter") {
-        console.log("Enter pressed!");
-        $('div[contenteditable="true"]').trigger('focus').trigger('blur');
-    }
 }
