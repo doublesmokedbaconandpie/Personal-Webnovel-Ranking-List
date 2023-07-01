@@ -54,4 +54,5 @@ div.scrollable {
     /* box-shadow: inset #54b3d6; */
     color: white;
     display: block;
+    translate: 0% -80%;
 }
