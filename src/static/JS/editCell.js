@@ -1,31 +1,37 @@
 document.querySelectorAll('td')
-        .forEach(e => e.addEventListener('keydown', editCell));
+        .forEach(e => e.addEventListener('blur', editCell));
+document.querySelectorAll('td')
+        .forEach(e => e.addEventListener('keydown', keyEditCell));
 
-async function editCell(evt){
+
+async function keyEditCell(evt){
     if (evt.key === "Enter") {
         console.log("Enter pressed!");
         $('div[contenteditable="true"]').trigger('focus').trigger('blur');
-        
-        var row = evt.target.parentElement;
-        let url = row.cells[2].children[0].children[0].getAttribute("href");
-        let val;
-        let col;
-        let date_val = row.cells[8].children[0].innerHTML;
+    }
+}
 
-        for (let i = 0; i < row.cells.length; i++) {
-            if (row.cells[i] == evt.target) {
-                val = row.cells[i].children[0].innerHTML;
-                col = row.parentElement.parentElement.rows[0].cells[i].innerHTML;
-                break;
-            }
-        }
-        const server_success = await sendDataToServer(url, col, val, date_val);
+async function editCell(evt){
+    var row = evt.target.parentElement;
+    let url = row.cells[2].children[0].children[0].getAttribute("href");
+    let val;
+    let col;
+    let new_date_val = getCurrDate();
 
-        if (server_success == 'true') {
-            old_date_div = row.cells[8].children[0];
-            new_date_div = getDivCurrDate()
-            row.cells[8].replaceChild(new_date_div, old_date_div);        
+    for (let i = 0; i < row.cells.length; i++) {
+        if (row.cells[i] == evt.target) {
+            val = row.cells[i].children[0].innerHTML;
+            col = row.parentElement.parentElement.rows[0].cells[i].innerHTML;
+            break;
         }
+    }
+
+    const server_success = await sendDataToServer(url, col, val, new_date_val);
+
+    if (server_success == 'true') {
+        old_date_div = row.cells[8].children[0];
+        new_date_div = getDivCurrDate()
+        row.cells[8].replaceChild(new_date_div, old_date_div);       
     }
 }
 
@@ -44,7 +50,6 @@ async function sendDataToServer(url, col, val, date_val) {
         .then(response => response.json());
 
     if (send_post['result'] == 'false') {
-        console.log("friend");
         return 'false';
     }
 
@@ -59,6 +64,15 @@ async function sendDataToServer(url, col, val, date_val) {
 }
 
 function getDivCurrDate() {
+    let currentDate = getCurrDate();
+
+    var div = document.createElement('div');
+    div.setAttribute('class', "scrollable");
+    div.innerHTML = currentDate;
+    return div;
+}
+
+function getCurrDate() {
     const date = new Date();
     let day = date.getDate();
     let month = date.getMonth() + 1;
@@ -66,12 +80,7 @@ function getDivCurrDate() {
     if (String(month).length == 1) {
         month = `0${month}`
     }
-    let currentDate = `${year}-${month}-${day}`;
-
-    var div = document.createElement('div');
-    div.setAttribute('class', "scrollable");
-    div.innerHTML = currentDate;
-    return div;
+    return `${year}-${month}-${day}`;
 }
 
 // update row in DB

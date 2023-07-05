@@ -41,7 +41,7 @@ def testfn():
         
         server_col = NovelEntry.conv_web_col_to_server_col(col)
         db.update_entry(url, server_col, val)
-        db.update_entry(url, 'DateModified' ,date_val)
+        db.update_entry(url, 'DateModified', date_val)
         return {'result': 'true'} 
     if request.method == 'GET':
         return {'result': 'true'} 
