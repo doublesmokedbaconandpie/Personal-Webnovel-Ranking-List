@@ -29,19 +29,19 @@ def testfn():
         db.select_table(table_name)
         
         post_json = request.get_json()
-        url, col, val, date_val = post_json['url'], post_json['col'], post_json['val'], post_json['date_val']
+        id, col, val, date_val = post_json['id'], post_json['col'], post_json['val'], post_json['date_val']
+        col_num = NovelEntry.get_col_num(col)
         
-        if not url:
+        if not db.exists_entry('ID', id):
             return {'result': 'false'} 
         if not NovelEntry.is_valid_col(col):
             return {'result': 'false'} 
-        col_num = NovelEntry.get_col_num(col)
-        if val == db.fetch_entry_from_url(post_json['url'])[0][col_num]:
+        if val == db.fetch_entry('ID', id)[0][col_num]:
             return {'result': 'false'}
         
         server_col = NovelEntry.conv_web_col_to_server_col(col)
-        db.update_entry(url, server_col, val)
-        db.update_entry(url, 'DateModified', date_val)
+        db.update_entry(id, server_col, val)
+        db.update_entry(id, 'DateModified', date_val)
         return {'result': 'true'} 
     if request.method == 'GET':
         return {'result': 'true'} 

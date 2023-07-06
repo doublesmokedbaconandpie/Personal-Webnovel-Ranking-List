@@ -21,7 +21,8 @@ async function editLinkCell(evt) {
 async function editCell(evt){
     console.log(evt.target);
     var row = evt.target.parentElement;
-    let url = row.cells[2].children[0].children[0].getAttribute("href");
+    // let url = row.cells[2].children[0].children[0].getAttribute("href");
+    let id = row.cells[10].children[0].innerHTML;
     let val;
     let col;
     let new_date_val = getCurrDate();
@@ -34,7 +35,7 @@ async function editCell(evt){
         }
     }
 
-    const server_success = await sendDataToServer(url, col, val, new_date_val);
+    const server_success = await sendDataToServer(id, col, val, new_date_val);
 
     if (server_success == 'true') {
         let old_date_div = row.cells[8].children[0];
@@ -43,14 +44,14 @@ async function editCell(evt){
     }
 }
 
-async function sendDataToServer(url, col, val, date_val) {
+async function sendDataToServer(id, col, val, date_val) {
     const send_post = await fetch(`/editCell`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            url: url,
+            id: id,
             col: col,
             val: val,
             date_val: date_val})
@@ -87,6 +88,9 @@ function getCurrDate() {
     let year = date.getFullYear();
     if (String(month).length == 1) {
         month = `0${month}`
+    }
+    if (String(day).length == 1) {
+        day = `0${day}`
     }
     return `${year}-${month}-${day}`;
 }
