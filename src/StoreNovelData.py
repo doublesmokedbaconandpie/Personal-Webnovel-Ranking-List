@@ -79,7 +79,7 @@ class StoreNovelData:
         return True
     
     def exists_entry(self, col, val) -> bool:
-        """Returns if a url's row exists in a specific table
+        """Returns if a row exists in a specific table
 
         Args:
             col: column in DB

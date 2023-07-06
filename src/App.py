@@ -29,19 +29,22 @@ def testfn():
         db.select_table(table_name)
         
         post_json = request.get_json()
-        url, col, val, date_val = post_json['url'], post_json['col'], post_json['val'], post_json['date_val']
-        
-        if not url:
-            return {'result': 'false'} 
-        if not NovelEntry.is_valid_col(col):
-            return {'result': 'false'} 
+        id, col, val, date_val = int(post_json['id']), post_json['col'], post_json['val'], post_json['date_val']
         col_num = NovelEntry.get_col_num(col)
-        if val == db.fetch_entry_from_url(post_json['url'])[0][col_num]:
-            return {'result': 'false'}
+        
+        if id > db.id_tracker.max_ID + 1:
+            return {'result': 'false', 'error': 'Invalid ID'} 
+        if not db.exists_entry('ID', id):
+            db.add_entry("Url", None) # placeholder to just add new id for new row
+        if not NovelEntry.is_valid_col(col):
+            return {'result': 'false', 'error': 'Invalid Column'} 
+        print(val, db.fetch_entry('ID', id)[0][col_num], val == db.fetch_entry('ID', id)[0][col_num])
+        if val == db.fetch_entry('ID', id)[0][col_num]:
+            return {'result': 'false', 'error': 'DB not updated'}
         
         server_col = NovelEntry.conv_web_col_to_server_col(col)
-        db.update_entry(url, server_col, val)
-        db.update_entry(url, 'DateModified', date_val)
+        db.update_entry(id, server_col, val)
+        db.update_entry(id, 'DateModified', date_val)
         return {'result': 'true'} 
     if request.method == 'GET':
         return {'result': 'true'} 
