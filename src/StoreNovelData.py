@@ -1,5 +1,7 @@
 import sqlite3
 from datetime import date
+from dataclasses import dataclass
+import os
 
 from NovelupdatesScraper import NovelupdatesScraper
 
@@ -19,6 +21,9 @@ class StoreNovelData:
         self.cursor: sqlite3.Cursor = self.conn.cursor()
         self.index_active: bool = False
         self.table_name: str = ""
+        self.id_tracker: IDTracker
+        self.valid_columns = ('Url', 'Country', 'Title', 'ChaptersCompleted', 'Rating', 
+                         'ReadingStatus', 'Genre', 'Tags', 'DateModified', 'Notes', 'ID')
         
     def select_table(self, table_name: str) -> bool:
         """Sets an active table
@@ -33,6 +38,7 @@ class StoreNovelData:
         if not self.table_exists(table_name):
             return False
         self.table_name = table_name
+        self.set_id_tracker()
         return True
     
     def create_table(self, table_name: str) -> bool:
@@ -50,7 +56,7 @@ class StoreNovelData:
             return False
         self.cursor.execute(f'''CREATE TABLE {table_name} (
             Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating TEXT,
-            ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)''')
+            ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT, ID INTEGER)''')
         self.conn.commit()
         return True
     
@@ -72,30 +78,42 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
-    def exists_url_entry(self, url: str) -> bool:
+    def exists_entry(self, col, val) -> bool:
         """Returns if a url's row exists in a specific table
 
         Args:
-            url (str): url
+            col: column in DB
+            val: value for respective column        
         """
-        if not self.table_name:
+        if not self.table_name or col not in self.valid_columns:
             return False
-        params = (url,)
-        result = self.cursor.execute(f"SELECT url FROM {self.table_name} WHERE url = ?", params).fetchall()
+        params = (val,)
+        result = self.cursor.execute(f"SELECT {col} FROM {self.table_name} WHERE {col}  = ?", params).fetchall()
         return bool(result)
+    
+    def add_entry(self, col, val) -> bool:
+        if not self.table_name or col not in self.valid_columns:
+            return False
+        params = ['', '', '', '', '', '', '', '', date.today().strftime("%Y-%m-%d"), '', '']
+        index = self.valid_columns.index(col)
+        params[index] = val
+        params[-1] = self.id_tracker.generate_new_ID()
+        params = tuple(params)
+        self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", params)
+        self.conn.commit()
+        return True
     
     def add_entry_from_url(self, url: str) -> bool:
         """Saves a url into a table
 
         Args:
-            url (str): url added
-            status (str, optional): Current status of url. Can be: Exists, Not Exists, No Internet, Renamed. Defaults to "".
-            archived (bool, optional): If url is archived to archive.org. Defaults to False.
+            col: column in DB
+            val: value for respective column
 
         Returns:
             bool: Whether the url was successfully added to the table
         """
-        if self.exists_url_entry(url) or not self.table_name:
+        if self.exists_entry("Url", url) or not self.table_name:
             return False
         
         novel = NovelupdatesScraper(url=url)
@@ -103,44 +121,47 @@ class StoreNovelData:
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
-        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '')
-        self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?)", params)
+        new_id = self.id_tracker.generate_new_ID()
+        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '', new_id)
+        self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", params)
         self.conn.commit()
         return True
     
-    def delete_entry_from_url(self, url: str) -> bool:
+    def delete_entry(self, col, val) -> bool:
         """Deletes a url from a table
 
         Args:
-            url (str): url to be deleted
+            col: column in DB
+            val: value for respective column
 
         Returns:
             bool: Whether the url was successfully deleted from the table
         """
-        
-        if not self.exists_url_entry(url) or not self.table_name:
+        if not self.exists_entry(col, val) or not self.table_name or col not in self.valid_columns:
             return False
         
-        command_string = f"DELETE FROM {self.table_name} WHERE url='{url}'"
-        self.cursor.execute(command_string)
+        params = (val, )
+        self.cursor.execute( f"DELETE FROM {self.table_name} WHERE {col}=?", params)
         self.conn.commit()
         return True
     
-    def fetch_entry_from_url(self, url: str) -> list:
+    def fetch_entry(self, col, val) -> list:
         """Returns 
 
         Args:
-            url (str):
+            col: column in DB
+            val: value for respective column
 
         Returns:
             list: [(Tuple of column data entries)], None if not found
         """
-        if not self.exists_url_entry(url) or not self.table_name:
+        if not self.exists_entry(col, val) or not self.table_name:
             return None
-        params = (url, )
-        return self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE Url = ?", params).fetchall()
+        
+        params = (val, )
+        return self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE {col} = ?", params).fetchall()
     
-    def update_entry(self, curr_url: str, column: str, val) -> bool:
+    def update_entry(self, ID: int, column: str, val) -> bool:
         """
 
         Args:
@@ -153,15 +174,26 @@ class StoreNovelData:
         """
         
         # Note there is no type checking
-        valid_columns = ('Url', 'Country', 'Title', 'ChaptersCompleted', 'Rating', 
-                         'ReadingStatus', 'Genre', 'Tags', 'DateModified', 'Notes')
-        if column not in valid_columns or not self.exists_url_entry(curr_url):
+        
+        if column not in self.valid_columns or not self.exists_entry('ID', ID):
             return False
         
-        params = (val, curr_url)
-        self.cursor.execute(f"UPDATE {self.table_name} SET {column}= ? WHERE url= ?", params)
+        params = (val, ID)
+        self.cursor.execute(f"UPDATE {self.table_name} SET {column}= ? WHERE ID = ?", params)
         self.conn.commit()
         return True
+    
+    def add_column(self, column_name: str, type_name: str) -> bool:
+        valid_types = ('NULL', 'INTEGER', 'REAL', 'TEXT', 'BLOB')
+        if column_name not in self.valid_columns or type_name not in valid_types:
+            return False
+        
+        self.cursor.execute(f"ALTER TABLE {self.table_name} ADD {column_name} {type_name}")
+        self.conn.commit()
+        return True
+    
+    def set_id_tracker(self) -> None:
+        self.id_tracker = IDTracker(filename=f"ID-{self.DBname.replace('.db', '').replace('/','')}-{self.table_name}.ID")
     
     def dump_table_to_list(self) -> list:
         if not self.table_name:
@@ -178,6 +210,31 @@ class StoreNovelData:
     def table_exists(self, table_name: str) -> bool:
         tables = self.cursor.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall() # list of tuples
         return (table_name,) in tables   
-        
+
+@dataclass(repr=True)
+class IDTracker:
+    filename: str = ""
+    max_ID: int = -1
+    
+    def __init__(self, filename):
+        if os.path.exists(filename):
+            with open(filename, 'r') as f:
+                self.max_ID = int(f.read())  
+                self.filename = filename
+        else:
+            self.filename = filename
+            self.set_max_ID(-1)
+                    
+    def set_max_ID(self, val) -> None:
+        if not isinstance(val, int):
+            raise TypeError(f'Set_max_ID can only set integers as ID, not "{val}"')
+        self.max_ID = val
+        with open(self.filename, 'w') as f:
+            f.write(str(val))
+            
+    def generate_new_ID(self) -> int:
+        self.set_max_ID(self.max_ID + 1)
+        return self.max_ID
+   
 if __name__ == "__main__":
     pass
