@@ -1,5 +1,5 @@
 body {
-    background-color: white;
+    background-color: rgb(72, 70, 70);
     color: black;
     font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
@@ -12,7 +12,7 @@ table {
     text-align: center;
 }
 
-div.scrollable {
+.scrollable {
     height: 80px;
     overflow: auto;
 } 
@@ -29,6 +29,53 @@ div.scrollable {
     background-color: rgba(220, 0, 0, 1);
     background-image: linear-gradient(to top left, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2) 30%, rgba(0, 0, 0, 0));
     box-shadow: inset 2px 2px 3px rgba(255, 255, 255, 0.6), inset -2px -2px 3px rgba(0, 0, 0, 0.6);
+}
+
+.col0 {
+    background-color: rgb(236, 129, 129);
+}
+
+.col1 {
+    background-color: rgb(183, 152, 96);
+}
+
+.col2 {
+    background-color: rgb(147, 147, 59);
+}
+
+.col3 {
+    background-color: rgb(63, 144, 63);
+}
+
+.col4 {
+    background-color: rgb(129, 129, 168);
+}
+
+.col5 {
+    background-color: rgb(148, 111, 174);
+}
+
+.col6 {
+    background-color: rgb(171, 103, 171);
+}
+
+.col7 {
+    background-color: rgb(65, 142, 116);
+}
+
+.col8 {
+    background-color: rgb(196, 122, 147);
+}
+
+.col9 {
+    background-color: rgb(104, 128, 82);
+}
+
+.col10 {
+    display: none;
+    padding: 0px;
+    margin: 0px;
+    border: 0px;
 }
 
 /* Dropdown Content (Hidden by Default) */
