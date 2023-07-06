@@ -38,7 +38,7 @@ function createLinkEditor(text) {
     return div;
 }
 
-function exitLinkEditor(evt) {
+async function exitLinkEditor(evt) {
     console.log("%c exitLinkEditor", "color:blue;");
     console.log(evt);
     var cell = evt.target.parentElement;
@@ -46,6 +46,17 @@ function exitLinkEditor(evt) {
     cell.children[0].children[0].setAttribute("href", linkText);
     cell.children[1].children[0].setAttribute("href", linkText);
     cell.removeChild(evt.target);
+
+    var row = cell.parentElement;
+    let id = row.cells[10].children[0].innerHTML;
+    let new_date_val = getCurrDate();
+    const server_success = await sendDataToServer(id, "Url", linkText, new_date_val);
+
+    if (server_success == 'true') {
+        let old_date_div = row.cells[8].children[0];
+        let new_date_div = getDivCurrDate()
+        row.cells[8].replaceChild(new_date_div, old_date_div);       
+    }
 }
 
 async function editCell(evt){
@@ -59,6 +70,7 @@ async function editCell(evt){
         if (row.cells[i] == evt.target) {
             val = row.cells[i].children[0].innerHTML;
             col = row.parentElement.parentElement.rows[0].cells[i].innerHTML;
+            if (val == "<br>") {val = "";}
             break;
         }
     }
