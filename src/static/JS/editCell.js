@@ -10,6 +10,9 @@ async function keydownListener(evt){
     }
     if (evt.key === "k" && evt.ctrlKey) {
         evt.preventDefault();
+        evt.stopPropagation();
+        if (evt.target.parentElement.className != 'col2'){return;}
+        if (evt.target.parentElement.children[2] == evt.target){return;}
         editLinkCell(evt);
     }
 }
@@ -17,9 +20,7 @@ async function keydownListener(evt){
 async function editLinkCell(evt) {
     console.log("%c editLinkCell", "color:red;");
     console.log(evt);
-    if (evt.target.parentElement.className != 'col2'){
-        return;
-    }
+
     var cell = evt.target.parentElement;
     console.log({"cell": cell, "evt":evt.target});
     var linkText = cell.children[0].children[0].getAttribute("href");
@@ -98,6 +99,7 @@ async function sendDataToServer(id, col, val, date_val) {
         })
         .then(response => response.json());
 
+    console.log("%c Post Data", "color:purple;")
     console.log({id, col, val, date_val, send_post});  
 
 
