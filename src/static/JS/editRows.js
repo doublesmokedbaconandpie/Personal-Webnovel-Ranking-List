@@ -1,3 +1,5 @@
+let dialog = import('./editCell.js')
+
 document.getElementById("addRow")
         .addEventListener("click", addRowClick);
 
@@ -30,6 +32,8 @@ function createCell(cell, text, class_name, content_editable) {
     if (content_editable) {cell.setAttribute("contenteditable", "true");}
     cell.setAttribute("class", class_name)
     cell.appendChild(div);
+    cell.addEventListener('keydown', keyEditCell);
+    cell.addEventListener('blur', editCell);
 }
 
 function checkLastRowEmpty(table){

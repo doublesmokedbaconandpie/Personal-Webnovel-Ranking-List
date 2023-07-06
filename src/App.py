@@ -14,6 +14,7 @@ def index():
     db.select_table(table_name)
     
     contents = db.dump_table_to_list()
+    print(contents)
     entries = []
     for i, entry in enumerate(contents):
         tmp = NovelEntry()
