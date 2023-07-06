@@ -1,5 +1,3 @@
-let dialog = import('./editCell.js')
-
 const table = document.getElementById("NovelTable");
 var Max_ID = getMaxId();
 
