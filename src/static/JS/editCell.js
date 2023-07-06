@@ -9,9 +9,17 @@ async function keyEditCell(evt){
         console.log("Enter pressed!");
         $('div[contenteditable="true"]').trigger('focus').trigger('blur');
     }
+    if (evt.key === "k" && evt.ctrlKey) {
+        editLinkCell(evt);
+    }
+}
+
+async function editLinkCell(evt) {
+    console.log(evt);
 }
 
 async function editCell(evt){
+    console.log(evt.target);
     var row = evt.target.parentElement;
     let url = row.cells[2].children[0].children[0].getAttribute("href");
     let val;
@@ -29,8 +37,8 @@ async function editCell(evt){
     const server_success = await sendDataToServer(url, col, val, new_date_val);
 
     if (server_success == 'true') {
-        old_date_div = row.cells[8].children[0];
-        new_date_div = getDivCurrDate()
+        let old_date_div = row.cells[8].children[0];
+        let new_date_div = getDivCurrDate()
         row.cells[8].replaceChild(new_date_div, old_date_div);       
     }
 }
