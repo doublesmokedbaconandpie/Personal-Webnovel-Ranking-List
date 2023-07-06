@@ -43,8 +43,10 @@
                     <td class = "col0"><div class = "scrollable">{{entry.number}}</div></td>
                     <td contenteditable="true" class = "col1"><div class = "scrollable">{{entry.country}}</div></td>
                     <td class = "col2">
-                        <div contenteditable="true" class = "scrollable"><a href="{{entry.url}}">{{entry.title}}</a></div>
-                        <div class = "col2dropdown"><a href="{{entry.url}}">{{entry.title}}</a></div>
+                        <div contenteditable="true" class = "scrollable">
+                            <a href="{{entry.url}}">{{entry.title}}</a></div>
+                        <div class = "col2dropdown">
+                            <a href="{{entry.url}}">{{entry.title}}</a></div>
                     </td>
                     <td contenteditable="true" class = "col3"><div class = "scrollable">{{entry.chapters_completed}}</div></td>
                     <td contenteditable="true" class = "col4"><div class = "scrollable">{{entry.rating}}</div></td>
@@ -59,5 +61,4 @@
             </tbody>
     </body>
     <script src="static/JS/editRows.js"></script>
-    <script src="static/JS/editCell.js"></script>
 </html>

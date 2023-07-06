@@ -38,7 +38,6 @@ def testfn():
             db.add_entry("Url", None) # placeholder to just add new id for new row
         if not NovelEntry.is_valid_col(col):
             return {'result': 'false', 'error': 'Invalid Column'} 
-        print(val, db.fetch_entry('ID', id)[0][col_num], val == db.fetch_entry('ID', id)[0][col_num])
         if val == db.fetch_entry('ID', id)[0][col_num]:
             return {'result': 'false', 'error': 'DB not updated'}
         
