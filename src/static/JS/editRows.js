@@ -1,10 +1,13 @@
 let dialog = import('./editCell.js')
 
+var table = document.getElementById("NovelTable");
+var Max_ID = getMaxId(table);
+
 document.getElementById("addRow")
         .addEventListener("click", addRowClick);
 
 function addRowClick() {
-    var table = document.getElementById("NovelTable");
+    // var table = 
     if (checkLastRowEmpty(table)) {return;}
     row = table.insertRow(table.rows.length);
     for (let i = 0; i < table.rows[0].cells.length; i++) {
@@ -19,6 +22,11 @@ function addRowClick() {
         if (i == 8) {
             createCell(row.insertCell(i), "", 'col8', false);
             continue;}
+        if (i == 10) {
+            createCell(row.insertCell(i), Max_ID + 1, 'col10', false);
+            Max_ID += 1;
+            continue;
+        }
         createCell(row.insertCell(i), "", `col${i}`, true);
     }
 }    
@@ -45,4 +53,10 @@ function checkLastRowEmpty(table){
         }
     }
     return true;
+}
+
+function getMaxId(table) {
+    // let table = document.getElementById("NovelTable");
+    let last_row = table.rows[table.rows.length - 1];
+    return parseInt(last_row.cells[10].children[0].innerHTML);
 }

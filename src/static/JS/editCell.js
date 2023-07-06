@@ -6,7 +6,6 @@ document.querySelectorAll('td')
 
 async function keyEditCell(evt){
     if (evt.key === "Enter") {
-        console.log("Enter pressed!");
         $('div[contenteditable="true"]').trigger('focus').trigger('blur');
     }
     if (evt.key === "k" && evt.ctrlKey) {
@@ -19,9 +18,7 @@ async function editLinkCell(evt) {
 }
 
 async function editCell(evt){
-    console.log(evt.target);
     var row = evt.target.parentElement;
-    // let url = row.cells[2].children[0].children[0].getAttribute("href");
     let id = row.cells[10].children[0].innerHTML;
     let val;
     let col;
@@ -58,6 +55,9 @@ async function sendDataToServer(id, col, val, date_val) {
         })
         .then(response => response.json());
 
+    console.log({id, col, val, date_val, send_post});  
+
+
     if (send_post['result'] == 'false') {
         return 'false';
     }
@@ -69,6 +69,7 @@ async function sendDataToServer(id, col, val, date_val) {
         }
     })
         .then(response => response.json());
+    
     return send_get['result'];
 }
 
