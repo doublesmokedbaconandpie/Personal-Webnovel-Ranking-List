@@ -1,20 +1,62 @@
 document.querySelectorAll('td')
         .forEach(e => e.addEventListener('blur', editCell));
 document.querySelectorAll('td')
-        .forEach(e => e.addEventListener('keydown', keyEditCell));
+        .forEach(e => e.addEventListener('keydown', keydownListener));
 
 
-async function keyEditCell(evt){
+async function keydownListener(evt){
     if (evt.key === "Enter") {
         $('div[contenteditable="true"]').trigger('focus').trigger('blur');
     }
     if (evt.key === "k" && evt.ctrlKey) {
+        evt.preventDefault();
         editLinkCell(evt);
     }
 }
 
 async function editLinkCell(evt) {
+    console.log("%c editLinkCell", "color:red;");
     console.log(evt);
+    if (evt.target.parentElement.className != 'col2'){
+        return;
+    }
+    var cell = evt.target.parentElement;
+    console.log({"cell": cell, "evt":evt.target});
+    var linkText = cell.children[0].children[0].getAttribute("href");
+    var linkEditor = createLinkEditor(linkText);
+    cell.appendChild(linkEditor);
+    linkEditor.focus();
+}
+
+function createLinkEditor(text) {
+    var div = document.createElement('div');
+    var txt = document.createTextNode(text);
+    div.appendChild(txt);
+    div.setAttribute("class", 'link-editor');
+    div.setAttribute("contenteditable", "true");
+    div.addEventListener('blur', exitLinkEditor);
+    return div;
+}
+
+async function exitLinkEditor(evt) {
+    console.log("%c exitLinkEditor", "color:blue;");
+    console.log(evt);
+    var cell = evt.target.parentElement;
+    var linkText = evt.target.innerHTML;
+    cell.children[0].children[0].setAttribute("href", linkText);
+    cell.children[1].children[0].setAttribute("href", linkText);
+    cell.removeChild(evt.target);
+
+    var row = cell.parentElement;
+    let id = row.cells[10].children[0].innerHTML;
+    let new_date_val = getCurrDate();
+    const server_success = await sendDataToServer(id, "Url", linkText, new_date_val);
+
+    if (server_success == 'true') {
+        let old_date_div = row.cells[8].children[0];
+        let new_date_div = getDivCurrDate()
+        row.cells[8].replaceChild(new_date_div, old_date_div);       
+    }
 }
 
 async function editCell(evt){
@@ -28,6 +70,7 @@ async function editCell(evt){
         if (row.cells[i] == evt.target) {
             val = row.cells[i].children[0].innerHTML;
             col = row.parentElement.parentElement.rows[0].cells[i].innerHTML;
+            if (val == "<br>") {val = "";}
             break;
         }
     }
@@ -96,7 +139,6 @@ function getCurrDate() {
     return `${year}-${month}-${day}`;
 }
 
-// update row in DB
 // maybe includes using the URL method to automatically populate genre tags
 // delete rows
 // delete cell, double click to edit?

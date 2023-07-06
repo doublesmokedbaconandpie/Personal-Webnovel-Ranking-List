@@ -1,13 +1,12 @@
 let dialog = import('./editCell.js')
 
-var table = document.getElementById("NovelTable");
-var Max_ID = getMaxId(table);
+const table = document.getElementById("NovelTable");
+var Max_ID = getMaxId();
 
 document.getElementById("addRow")
         .addEventListener("click", addRowClick);
 
 function addRowClick() {
-    // var table = 
     if (checkLastRowEmpty(table)) {return;}
     row = table.insertRow(table.rows.length);
     for (let i = 0; i < table.rows[0].cells.length; i++) {
@@ -38,15 +37,15 @@ function createCell(cell, text, class_name, content_editable) {
     div.setAttribute('class', "scrollable");
     
     if (content_editable) {cell.setAttribute("contenteditable", "true");}
-    cell.setAttribute("class", class_name)
+    cell.setAttribute("class", class_name);
     cell.appendChild(div);
-    cell.addEventListener('keydown', keyEditCell);
+    cell.addEventListener('keydown', keydownListener);
     cell.addEventListener('blur', editCell);
 }
 
 function checkLastRowEmpty(table){
     var last_row = table.rows[table.rows.length - 1];
-    for (let i = 1; i < last_row.cells.length; i++) {
+    for (let i = 1; i < 10; i++) {
         let inner_div = last_row.cells[i].children[0];
         if (inner_div.innerHTML != "") {
             return false;
@@ -55,8 +54,7 @@ function checkLastRowEmpty(table){
     return true;
 }
 
-function getMaxId(table) {
-    // let table = document.getElementById("NovelTable");
+function getMaxId() {
     let last_row = table.rows[table.rows.length - 1];
     return parseInt(last_row.cells[10].children[0].innerHTML);
 }

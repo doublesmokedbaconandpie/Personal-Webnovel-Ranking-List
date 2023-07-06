@@ -96,10 +96,10 @@ table {
     display: block;
   }
 
-
+/* 
 .col2:hover .col2dropdown {
-    /* box-shadow: inset #54b3d6; */
+    box-shadow: inset #54b3d6; 
     color: white;
     display: block;
     translate: 0% -80%;
-}
+} */
