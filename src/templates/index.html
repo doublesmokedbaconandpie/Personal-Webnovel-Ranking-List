@@ -12,20 +12,29 @@
         <table id="NovelTable">
             <colgroup>
                 <col style = "width:5%">
+                <col style = "width:5%">
+                <col style = "width:15%">
+                <col style = "width:8%">
+                <col style = "width:7%">
+                <col style = "width:5%">
+                <col style = "width:15%">
+                <col style = "width:15%">
                 <col style = "width:10%">
+                <col style = "width:15%">
             </colgroup>
             <thead>
                 <tr class="HeaderRow">
-                    <th>#</th>
-                    <th>Country</th>
-                    <th>Title</th>
-                    <th>Chapters Completed</th>
-                    <th>Rating (Out of 10)</th>
-                    <th>Reading Status</th>
-                    <th>Genre</th>
-                    <th>Tags</th>
-                    <th>Date Modified</th>
-                    <th>Notes</th>
+                    <th class= "col0">#</th>
+                    <th class= "col1">Country</th>
+                    <th class= "col2">Title</th>
+                    <th class= "col3">Chapters Completed</th>
+                    <th class= "col4">Rating (Out of 10)</th>
+                    <th class= "col5">Reading Status</th>
+                    <th class= "col6">Genre</th>
+                    <th class= "col7">Tags</th>
+                    <th class= "col8">Date Modified</th>
+                    <th class= "col9">Notes</th>
+                    <th class = "col10">ID</th> 
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +53,7 @@
                     <td contenteditable="true" class = "col7"><div class = "scrollable">{{entry.tags}}</div></td>
                     <td class = "col8"><div class = "scrollable">{{entry.date_modified}}</div></td>
                     <td contenteditable="true" class = "col9"><div class = "scrollable">{{entry.notes}}</div></td>
+                    <td class = "col10"><div>{{entry.id}}</div></td>
                 </tr>
                 {% endfor %}
             </tbody>

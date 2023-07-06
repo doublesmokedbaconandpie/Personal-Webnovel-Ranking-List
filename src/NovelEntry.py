@@ -14,6 +14,7 @@ class NovelEntry:
     date_modified: str = ""
     notes: str = ""
     novel_type: str = ""    
+    id: int = -1
     
     def assign_vals_from_tuple(self, i, entry: tuple):
         self.number = str(i + 1) + '.'
@@ -27,6 +28,7 @@ class NovelEntry:
         self.tags = entry[7]
         self.date_modified = entry[8]
         self.notes = entry[9]
+        self.id = entry[10]
     
     @staticmethod
     def is_valid_col(col):
@@ -51,5 +53,5 @@ class NovelEntry:
                       'Genre': 'Genre',
                       'Tags': 'Tags',
                       'Date Modified': "DateModified",
-                      'Notes': 'Notes'}
+                      'Notes': 'Notes'} # ID not included because ID shouldn't be edited from client
         return valid_cols[col]
