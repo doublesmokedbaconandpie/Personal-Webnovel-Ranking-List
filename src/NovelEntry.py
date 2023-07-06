@@ -16,7 +16,7 @@ class NovelEntry:
     novel_type: str = ""    
     id: int = -1
     
-    def assign_vals_from_tuple(self, i, entry: tuple):
+    def assign_vals_from_tuple(self, entry: tuple, i: int = -1):
         self.number = str(i + 1) + '.'
         self.url = entry[0]
         self.country = entry[1]
@@ -29,7 +29,22 @@ class NovelEntry:
         self.date_modified = entry[8]
         self.notes = entry[9]
         self.id = entry[10]
-    
+        
+    def return_tuple_from_vals(self):
+        params = ['', '', '', '', '', '', '', '', '', '', '']
+        params[0] = self.url
+        params[1] = self.country
+        params[2] = self.title
+        params[3] = self.chapters_completed
+        params[4] = self.rating
+        params[5] = self.reading_status
+        params[6] = self.genre
+        params[7] = self.tags
+        params[8] = self.date_modified
+        params[9] = self.notes
+        params[10] = self.id
+        return tuple(params)
+        
     @staticmethod
     def is_valid_col(col):
         valid_cols = ['Country', 'Title','Url','Chapters Completed','Rating (Out of 10)','Reading Status', 'Genre','Tags','Date Modified','Notes']

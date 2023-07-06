@@ -13,16 +13,11 @@ def index():
     table_name = 'Webnovels'
     db.select_table(table_name)
     
-    contents = db.dump_table_to_list()
-    entries = []
-    for i, entry in enumerate(contents):
-        tmp = NovelEntry()
-        tmp.assign_vals_from_tuple(i, entry)
-        entries.append(tmp)
+    entries = db.dump_table_to_list()
     return render_template('index.html', title_name = table_name, entries = entries)
 
 @app.route('/editCell', methods=['POST', 'GET'])
-def testfn():
+def saveEditCell():
     if request.method == 'POST':
         db = StoreNovelData('App.db')
         table_name = 'Webnovels'
@@ -38,13 +33,34 @@ def testfn():
             db.add_entry("Url", None) # placeholder to just add new id for new row
         if not NovelEntry.is_valid_col(col):
             return {'result': 'false', 'error': 'Invalid Column'} 
-        if val == db.fetch_entry('ID', id)[0][col_num]:
+        if val == db.fetch_entry('ID', id)[0].return_tuple_from_vals()[col_num]:
             return {'result': 'false', 'error': 'DB not updated'}
         
         server_col = NovelEntry.conv_web_col_to_server_col(col)
         db.update_entry(id, server_col, val)
         db.update_entry(id, 'DateModified', date_val)
         return {'result': 'true'} 
-    if request.method == 'GET':
-        return {'result': 'true'} 
-    
+
+@app.route('/fetchScrapedRow', methods=['POST'])
+def fetchScrapedRow():
+    if request.method == 'POST':
+        db = StoreNovelData('App.db')
+        table_name = 'Webnovels'
+        db.select_table(table_name)
+        
+        post_json = request.get_json()
+        url, id = post_json['url'], int(post_json['id'])
+        scrape_url = db.add_entry_from_url(url)
+        if not scrape_url:
+            return {'result': 'false', 'error': f"Scraping url: [{url}] failed"} 
+        
+        row = db.fetch_entry('ID', id)
+        data = NovelEntry(row[0])
+        return {'result': 'true',
+                'url': data.url,
+                'country': data.country,
+                'title': data.title,
+                'genre': data.genre,
+                'tags': data.tags,
+                'date_modified': data.date_modified,
+                'id': data.id} 

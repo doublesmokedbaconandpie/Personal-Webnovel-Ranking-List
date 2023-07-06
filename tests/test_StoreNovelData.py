@@ -4,6 +4,7 @@ import shutil
 import datetime
 
 from StoreNovelData import StoreNovelData
+from NovelEntry import NovelEntry
 
 ORIGIN_DB = 'tests/db_files/ISSTH.db'
 ORIGIN_URL = "https://www.novelupdates.com/series/i-shall-seal-the-heavens/"
@@ -49,10 +50,13 @@ class TestTable(unittest.TestCase):
 
 class TestInsertDeleteFetch(unittest.TestCase):        
     def setUp(self):
-        self.expected_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
+        raw_tuple = ('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
             '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
-            datetime.date.today().strftime("%Y-%m-%d"), '', 0)]
+            datetime.date.today().strftime("%Y-%m-%d"), '', 0)
+        tmp = NovelEntry()
+        tmp.assign_vals_from_tuple(raw_tuple)
+        self.expected_entry = [tmp]
         self.invalid_url = "https://www.novelupdates.com/series/reverend-insanity/"
         
     def test_insert_url(self):
@@ -180,14 +184,17 @@ class TestInsertDeleteFetch(unittest.TestCase):
 
 class TestUpdateEntry(unittest.TestCase):
     def setUp(self):
-        self.default_entry = [('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
+        raw_tuple = ('https://www.novelupdates.com/series/i-shall-seal-the-heavens/', 'CN', 'I Shall Seal the Heavens', '', 
             '', '', "['Action', 'Adventure', 'Drama', 'Xianxia']",
             "['Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']",
-            datetime.date.today().strftime("%Y-%m-%d"), '', 0)]
+            datetime.date.today().strftime("%Y-%m-%d"), '', 0)
+        tmp = NovelEntry()
+        tmp.assign_vals_from_tuple(raw_tuple)
+        self.default_entry = tmp
     def test_update_url(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[0] = 'https://www.novelupdates.com/series/reverend-insanity/'
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.url = 'https://www.novelupdates.com/series/reverend-insanity/'
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_url.db')
         test = StoreNovelData('test_update_url.db')
         test.select_table('test')
@@ -199,9 +206,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)
         
     def test_update_country(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[1] = 'JP'
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.country = 'JP'
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_country.db')
         test = StoreNovelData('test_update_country.db')
         test.select_table('test')
@@ -213,9 +220,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
          
     def test_update_title(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[2] = 'Reverend Insanity'
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.title = 'Reverend Insanity'
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_title.db')
         test = StoreNovelData('test_update_title.db')
         test.select_table('test')
@@ -227,9 +234,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
              
     def test_update_chapters_completed(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[3] = '150'
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.chapters_completed = '150'
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_chapters_completed.db')
         test = StoreNovelData('test_update_chapters_completed.db')
         test.select_table('test')
@@ -241,9 +248,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
                  
     def test_update_rating(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[4] = '7'
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.rating = '7'
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_rating.db')
         test = StoreNovelData('test_update_rating.db')
         test.select_table('test')
@@ -255,9 +262,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
                  
     def test_update_reading_status(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[5] = 'No'
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.reading_status = 'No'
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_reading_status.db')
         test = StoreNovelData('test_update_reading_status.db')
         test.select_table('test')
@@ -269,9 +276,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
                  
     def test_update_genre(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[6] = "['Action', 'Adventure', 'Drama', 'Xianxia, Fantasy']"
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.genre = "['Action', 'Adventure', 'Drama', 'Xianxia, Fantasy']"
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_genre.db')
         test = StoreNovelData('test_update_genre.db')
         test.select_table('test')
@@ -283,9 +290,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
                     
     def test_update_tags(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[7] = "['TestTag', 'Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']"
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.tags = "['TestTag', 'Abandoned Children', 'Adapted to Manhua', 'Age Regression', 'Alchemy', 'Amnesia', 'Appearance Changes', 'Appearance Different from Actual Age', 'Artifacts', 'Bloodlines', 'Body Tempering', 'Calm Protagonist', 'Character Growth', 'Cultivation', 'Cunning Protagonist', 'Dao Comprehension', 'Demonic Cultivation Technique', 'Demons', 'Determined Protagonist', 'Devoted Love Interests', 'Fated Lovers', 'Friendship', 'Gods', 'Handsome Male Lead', 'Hard-Working Protagonist', 'Heavenly Tribulation', 'Immortals', 'Legends', 'Long Separations', 'Lucky Protagonist', 'Magic', 'Male Protagonist', 'Marriage', 'Master-Disciple Relationship', 'Money Grubber', 'Monsters', 'Multiple Realms', 'Multiple Reincarnated Individuals', 'Mysterious Family Background', 'Near-Death Experience', 'Past Plays a Big Role', 'Pill Concocting', 'Poor to Rich', 'Protagonist with Multiple Bodies', 'Race Change', 'Romantic Subplot', 'Ruthless Protagonist', 'Shameless Protagonist', 'Sharp-tongued Characters', 'Slow Romance', 'Time Manipulation', 'Tragic Past', 'Trickster', 'Underestimated Protagonist', 'Unrequited Love', 'Wars', 'Weak to Strong']"
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_tags.db')
         test = StoreNovelData('test_update_tags.db')
         test.select_table('test')
@@ -297,9 +304,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
                    
     def test_update_date_modified(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[8] = "2001-10-10"
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.date_modified = "2001-10-10"
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_date_modified.db')
         test = StoreNovelData('test_update_date_modified.db')
         test.select_table('test')
@@ -311,9 +318,9 @@ class TestUpdateEntry(unittest.TestCase):
         self.assertEqual(entry, expected_entry)   
                  
     def test_update_notes(self):
-        expected_entry = list(self.default_entry[0])
-        expected_entry[9] = "I have not read this yet lmao "
-        expected_entry = [tuple(expected_entry),]
+        expected_entry = self.default_entry
+        expected_entry.notes = "I have not read this yet lmao "
+        expected_entry = [expected_entry]
         shutil.copy(ORIGIN_DB, 'test_update_notes.db')
         test = StoreNovelData('test_update_notes.db')
         test.select_table('test')
