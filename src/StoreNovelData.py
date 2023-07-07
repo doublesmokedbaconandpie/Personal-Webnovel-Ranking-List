@@ -172,9 +172,10 @@ class StoreNovelData:
         params = (val, )
         raw_tuple_list = self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE {col} = ?", params).fetchall()
         NovelEntryList = []
-        for i in raw_tuple_list:
+        for i, j in enumerate(raw_tuple_list):
             tmp = NovelEntry()
-            tmp.assign_vals_from_tuple(i)
+            tmp.assign_vals_from_tuple(j)
+            tmp.number = str(i + 1) + '.'
             NovelEntryList.append(tmp)
         return NovelEntryList
     
@@ -239,7 +240,7 @@ class StoreNovelData:
         for i, j in enumerate(raw_tuple_list):
             tmp = NovelEntry()
             tmp.assign_vals_from_tuple(j)
-            tmp.number = i + 1
+            tmp.number = str(i + 1) + '.'
             NovelEntryList.append(tmp)
         return NovelEntryList
         
