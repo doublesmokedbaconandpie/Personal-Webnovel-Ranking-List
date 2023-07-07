@@ -12,9 +12,7 @@ function addRowClick() {
             createCell(row.insertCell(i), `${table.rows.length - 1}.`, 'col0', false);
             continue;}
         if (i == 2) {
-            createCell(row.insertCell(i), "", 'col2', false);
-            let div1 = row.cells[2].children[0];
-            div1.setAttribute("contenteditable", true);
+            createCellCol2(row.insertCell(i));
             continue;}
         if (i == 8) {
             createCell(row.insertCell(i), "", 'col8', false);
@@ -38,8 +36,32 @@ function createCell(cell, text, class_name, content_editable) {
     cell.setAttribute("class", class_name);
     cell.appendChild(div);
     cell.addEventListener('keydown', keydownListener);
-    cell.addEventListener('blur', editCell);
+    cell.addEventListener('blur', saveEditCell);
+    return cell;
 }
+
+function createCellCol2(cell) {
+    var div1 = document.createElement('div');
+    var txt1 = document.createElement('a');
+    txt1.setAttribute('href', '');
+    div1.appendChild(txt1);
+    div1.setAttribute('class', "scrollable");
+    div1.setAttribute("contenteditable", "true");
+
+    var div2 = document.createElement('div');
+    var txt2 = document.createElement('a');
+    txt2.setAttribute('href', '');
+    div2.appendChild(txt2);
+    div2.setAttribute('class', "col2dropdown");
+
+    cell.setAttribute("class", "col2");
+    cell.appendChild(div1);
+    cell.appendChild(div2);
+    cell.addEventListener('keydown', keydownListener);
+    cell.addEventListener('blur', saveEditCell);
+    return cell;
+}
+
 
 function checkLastRowEmpty(table){
     var last_row = table.rows[table.rows.length - 1];

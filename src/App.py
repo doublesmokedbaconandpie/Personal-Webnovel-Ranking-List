@@ -50,12 +50,17 @@ def fetchScrapedRow():
         
         post_json = request.get_json()
         url, id = post_json['url'], int(post_json['id'])
-        scrape_url = db.add_entry_from_url(url)
+        if id > db.id_tracker.max_ID + 1:
+            return {'result': 'false', 'error': 'Invalid ID'} 
+        elif id == db.id_tracker.max_ID + 1:
+            scrape_url = db.add_entry_from_url(url)
+        else:
+            scrape_url = db.update_entry_from_url(id, url)
+        
         if not scrape_url:
             return {'result': 'false', 'error': f"Scraping url: [{url}] failed"} 
         
-        row = db.fetch_entry('ID', id)
-        data = NovelEntry(row[0])
+        data = db.fetch_entry('ID', id)[0]
         return {'result': 'true',
                 'url': data.url,
                 'country': data.country,

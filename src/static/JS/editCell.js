@@ -1,5 +1,5 @@
 document.querySelectorAll('td')
-        .forEach(e => e.addEventListener('blur', editCell));
+        .forEach(e => e.addEventListener('blur', saveEditCell));
 document.querySelectorAll('td')
         .forEach(e => e.addEventListener('keydown', keydownListener));
 
@@ -51,16 +51,47 @@ async function exitLinkEditor(evt) {
     var row = cell.parentElement;
     let id = row.cells[10].children[0].innerHTML;
     let new_date_val = getCurrDate();
-    const server_success = await sendDataToServer(id, "Url", linkText, new_date_val);
 
-    if (server_success == 'true') {
-        let old_date_div = row.cells[8].children[0];
-        let new_date_div = getDivCurrDate()
-        row.cells[8].replaceChild(new_date_div, old_date_div);       
+    const send_get = await retrieveDataFromServer(id, linkText);
+    if (send_get['result'] == 'true') {
+        console.log("%c editing after scraping", "color:brown;");
+        console.log({row});
+        console.log({'a': row.cells[1].children[0], 'b': row.cells[1].children[0].innerHTML})
+        row.cells[1].children[0].innerHTML = send_get['country'];
+        row.cells[6].children[0].innerHTML = send_get['genre'];
+        row.cells[7].children[0].innerHTML = send_get['tags'];
+        row.cells[8].children[0].innerHTML = send_get['date_modified'];
+        row.cells[2].children[0].children[0].innerHTML = send_get['title'];
+        row.cells[2].children[1].children[0].innerHTML = send_get['title'];
+        console.log({row});
+        return;
+    }
+
+    const server_success = await sendDataToServer(id, "Url", linkText, new_date_val);
+    if (server_success['result'] == 'true') {  
+        row.cells[8].children[0].innerHTML = getCurrDate();
     }
 }
 
-async function editCell(evt){
+async function retrieveDataFromServer(id, url) {
+    console.log(`Sending id ${id} and url ${url}`);
+    const send_get = await fetch(`/fetchScrapedRow`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            id: id,
+            url: url})
+    })
+        .then(response => response.json());
+    
+    console.log("%c Get Data", "color:yellow;")
+    console.log({send_get});  
+    return send_get;
+}
+
+async function saveEditCell(evt){
     var row = evt.target.parentElement;
     let id = row.cells[10].children[0].innerHTML;
     let val;
@@ -76,9 +107,8 @@ async function editCell(evt){
         }
     }
 
-    const server_success = await sendDataToServer(id, col, val, new_date_val);
-
-    if (server_success == 'true') {
+    const send_post = await sendDataToServer(id, col, val, new_date_val);
+    if (send_post['result'] == 'true') {
         let old_date_div = row.cells[8].children[0];
         let new_date_div = getDivCurrDate()
         row.cells[8].replaceChild(new_date_div, old_date_div);       
@@ -101,21 +131,7 @@ async function sendDataToServer(id, col, val, date_val) {
 
     console.log("%c Post Data", "color:purple;")
     console.log({id, col, val, date_val, send_post});  
-
-
-    if (send_post['result'] == 'false') {
-        return 'false';
-    }
-
-    const send_get = await fetch(`/editCell`, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then(response => response.json());
-    
-    return send_get['result'];
+    return send_post;
 }
 
 function getDivCurrDate() {

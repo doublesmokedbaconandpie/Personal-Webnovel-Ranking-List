@@ -117,8 +117,7 @@ class StoreNovelData:
         """Saves a url into a table
 
         Args:
-            col: column in DB
-            val: value for respective column
+            url: url value
 
         Returns:
             bool: Whether the url was successfully added to the table
@@ -201,6 +200,25 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
+    def update_entry_from_url(self, id: int, url: str): 
+        if not self.exists_entry("ID", id) or not self.table_name:
+            return False
+        
+        novel = NovelupdatesScraper(url=url)
+        scrape_succeeded = novel.scrape_from_url()
+        if not scrape_succeeded:
+            return False
+        
+        # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
+        # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
+        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '', id)
+        self.cursor.execute(f"UPDATE {self.table_name} SET \
+                            Url = ?, Country = ?, Title = ?, ChaptersCompleted = ?, Rating = ?, ReadingStatus = ?, \
+                            Genre = ?, Tags = ?, DateModified = ?, Notes = ?\
+                            WHERE ID = ?", params)
+        self.conn.commit()
+        return True
+    
     def add_column(self, column_name: str, type_name: str) -> bool:
         valid_types = ('NULL', 'INTEGER', 'REAL', 'TEXT', 'BLOB')
         if column_name not in self.valid_columns or type_name not in valid_types:
@@ -277,13 +295,4 @@ class IDTracker:
         return self.max_ID
    
 if __name__ == "__main__":
-    thing = StoreNovelData('App.db')
-    thing.select_table('Webnovels')
-    
-    # thing.reset_id_values()
-    
-    # thing = StoreNovelData('App.db')
-
-    a = thing.dump_table_to_list()
-    for i in a:
-        print(i)
+    pass
