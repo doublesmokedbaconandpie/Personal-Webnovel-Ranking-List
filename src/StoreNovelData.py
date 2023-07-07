@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import os
 
 from NovelupdatesScraper import NovelupdatesScraper
+from NovelEntry import NovelEntry
 
 class StoreNovelData:
     def __init__(self, DBname: str) -> None:
@@ -74,7 +75,7 @@ class StoreNovelData:
         
         self.cursor.execute(f"DROP TABLE {table_name}")
         if self.table_name == table_name:
-            self.table = ""
+            self.table_name = ""
         self.conn.commit()
         return True
     
@@ -103,12 +104,20 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
+    def add_full_entry(self, row: NovelEntry) -> bool:
+        if not self.table_name or not isinstance(row, NovelEntry):
+            return False
+        row.id = self.id_tracker.generate_new_ID()
+        params = row.return_tuple_from_vals()
+        self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", params)
+        self.conn.commit()
+        return True
+    
     def add_entry_from_url(self, url: str) -> bool:
         """Saves a url into a table
 
         Args:
-            col: column in DB
-            val: value for respective column
+            url: url value
 
         Returns:
             bool: Whether the url was successfully added to the table
@@ -117,7 +126,9 @@ class StoreNovelData:
             return False
         
         novel = NovelupdatesScraper(url=url)
-        novel.scrape_from_url()
+        scrape_succeeded = novel.scrape_from_url()
+        if not scrape_succeeded:
+            return False
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
@@ -159,7 +170,13 @@ class StoreNovelData:
             return None
         
         params = (val, )
-        return self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE {col} = ?", params).fetchall()
+        raw_tuple_list = self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE {col} = ?", params).fetchall()
+        NovelEntryList = []
+        for i in raw_tuple_list:
+            tmp = NovelEntry()
+            tmp.assign_vals_from_tuple(i)
+            NovelEntryList.append(tmp)
+        return NovelEntryList
     
     def update_entry(self, ID: int, column: str, val) -> bool:
         """
@@ -183,6 +200,25 @@ class StoreNovelData:
         self.conn.commit()
         return True
     
+    def update_entry_from_url(self, id: int, url: str): 
+        if not self.exists_entry("ID", id) or not self.table_name:
+            return False
+        
+        novel = NovelupdatesScraper(url=url)
+        scrape_succeeded = novel.scrape_from_url()
+        if not scrape_succeeded:
+            return False
+        
+        # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
+        # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
+        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '', id)
+        self.cursor.execute(f"UPDATE {self.table_name} SET \
+                            Url = ?, Country = ?, Title = ?, ChaptersCompleted = ?, Rating = ?, ReadingStatus = ?, \
+                            Genre = ?, Tags = ?, DateModified = ?, Notes = ?\
+                            WHERE ID = ?", params)
+        self.conn.commit()
+        return True
+    
     def add_column(self, column_name: str, type_name: str) -> bool:
         valid_types = ('NULL', 'INTEGER', 'REAL', 'TEXT', 'BLOB')
         if column_name not in self.valid_columns or type_name not in valid_types:
@@ -198,7 +234,29 @@ class StoreNovelData:
     def dump_table_to_list(self) -> list:
         if not self.table_name:
             return None
-        return self.cursor.execute(f"SELECT * FROM {self.table_name}").fetchall()
+        raw_tuple_list = self.cursor.execute(f"SELECT * FROM {self.table_name}").fetchall()
+        NovelEntryList = []
+        for i, j in enumerate(raw_tuple_list):
+            tmp = NovelEntry()
+            tmp.assign_vals_from_tuple(j)
+            tmp.number = i + 1
+            NovelEntryList.append(tmp)
+        return NovelEntryList
+        
+    def reset_id_values(self):
+        oldList = self.dump_table_to_list()
+        new_db = StoreNovelData("replacement.db")
+        new_db.create_table(self.table_name)
+        new_db.select_table(self.table_name)
+        for entry in oldList:
+            new_db.add_full_entry(entry)
+        self.close_database()
+        os.remove(self.DBname)
+        os.remove(f"ID-{self.DBname.replace('.db', '').replace('/','')}-{self.table_name}.ID")
+        os.rename("replacement.db" , self.DBname)
+        os.rename(f"ID-replacement-{self.table_name}.ID",
+                  f"ID-{self.DBname.replace('.db', '').replace('/','')}-{self.table_name}.ID")
+        self = new_db
     
     def close_database(self) -> None:
         """Self explanatory

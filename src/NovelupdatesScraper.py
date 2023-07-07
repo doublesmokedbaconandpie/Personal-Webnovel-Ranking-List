@@ -3,6 +3,7 @@ import string
 from dataclasses import dataclass, field
 
 import cloudscraper
+from cloudscraper.exceptions import CloudflareChallengeError
 import requests
 from bs4 import BeautifulSoup
 
@@ -29,6 +30,8 @@ class NovelupdatesScraper:
             scraper = cloudscraper.create_scraper(delay = 6)
             self.html = scraper.get(self.url).text
         except requests.exceptions.MissingSchema:
+            return False
+        except CloudflareChallengeError:
             return False
         return self.get_info_from_html()
         
