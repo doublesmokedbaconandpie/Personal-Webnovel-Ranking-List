@@ -17,8 +17,10 @@ origin.delete_table('test')
 origin.create_table('test')
 origin.select_table('test')
 # origin.add_entry_from_url(ORIGIN_URL)
-params = tuple(test_entry)
-origin.cursor.execute(f"INSERT INTO {origin.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", test_entry)
+params = NovelEntry()
+params.assign_vals_from_tuple(test_entry)
+origin.add_full_entry(params)
+# origin.cursor.execute(f"INSERT INTO {origin.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", test_entry)
 origin.close_database()
 
 class TestTable(unittest.TestCase):
@@ -56,6 +58,7 @@ class TestInsertDeleteFetch(unittest.TestCase):
             datetime.date.today().strftime("%Y-%m-%d"), '', 0)
         tmp = NovelEntry()
         tmp.assign_vals_from_tuple(raw_tuple)
+        tmp.number = '1.'
         self.expected_entry = [tmp]
         self.invalid_url = "https://www.novelupdates.com/series/reverend-insanity/"
         
@@ -190,6 +193,7 @@ class TestUpdateEntry(unittest.TestCase):
             datetime.date.today().strftime("%Y-%m-%d"), '', 0)
         tmp = NovelEntry()
         tmp.assign_vals_from_tuple(raw_tuple)
+        tmp.number = "1."
         self.default_entry = tmp
     def test_update_url(self):
         expected_entry = self.default_entry
