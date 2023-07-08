@@ -29,7 +29,7 @@ class NovelupdatesScraper:
         Returns:
             bool: Whether scraping data from the url succeeded
         """
-        logging.info('Beginning to scrape from url')
+        logging.info('scrape_from_url')
         if "https://www.novelupdates.com/series/" not in self.url:
             logging.warning(f'Not novelupdates url: {self.url}')
             return False
@@ -60,7 +60,7 @@ class NovelupdatesScraper:
         Returns:
             bool: Whether the file was found and info scraping succeeded
         """
-        logging.info(f'Trying to import html file: {filename}')
+        logging.info(f'import_html: {filename}')
         if not os.path.isfile(filename):
             logging.warning(f'Html file does not exist: {filename}')
             return False
@@ -77,7 +77,7 @@ class NovelupdatesScraper:
             bool: Whether scraping html data values succeeded
         """
         try:
-            logging.info('Getting info from html')
+            logging.info('get_info_from_html')
             soup = BeautifulSoup(self.html, "html.parser")    
             uncleaned_tags = soup.find_all(id = "etagme")
             self.tags = [i.getText() for i in uncleaned_tags]
