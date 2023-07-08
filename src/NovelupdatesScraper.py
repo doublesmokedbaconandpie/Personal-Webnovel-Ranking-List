@@ -14,7 +14,6 @@ class NovelupdatesScraper:
     html: str = ""
     tags: list = field(default_factory=list)
     genre: list = field(default_factory=list)
-    title: str = ""
     country: string = ""
     novel_type: str = ""
     
@@ -27,7 +26,14 @@ class NovelupdatesScraper:
         if "https://www.novelupdates.com/series/" not in self.url:
             return False
         try:
-            scraper = cloudscraper.create_scraper(delay = 6)
+            scraper = cloudscraper.create_scraper(
+                delay = 10, 
+                browser={
+                    'browser': 'chrome',
+                    'platform': 'android',
+                    'desktop': False
+                }
+            )
             self.html = scraper.get(self.url).text
         except requests.exceptions.MissingSchema:
             return False

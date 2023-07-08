@@ -7,7 +7,7 @@ from NovelupdatesScraper import NovelupdatesScraper
 from NovelEntry import NovelEntry
 
 class StoreNovelData:
-    def __init__(self, DBname: str) -> None:
+    def __init__(self, DBname: str, altDBname = "", altTable = "") -> None:
         """Creates a database connection. Since this is a URL database, columns are planned as ("url", "status", "archived"). Use select_table() 
         to choose an active table
         
@@ -25,6 +25,8 @@ class StoreNovelData:
         self.id_tracker: IDTracker
         self.valid_columns = ('Url', 'Country', 'Title', 'ChaptersCompleted', 'Rating', 
                          'ReadingStatus', 'Genre', 'Tags', 'DateModified', 'Notes', 'ID')
+        self.altDBname = altDBname
+        self.altTable = altTable
         
     def select_table(self, table_name: str) -> bool:
         """Sets an active table
@@ -125,10 +127,15 @@ class StoreNovelData:
         if self.exists_entry("Url", url) or not self.table_name:
             return False
         
-        novel = NovelupdatesScraper(url=url)
-        scrape_succeeded = novel.scrape_from_url()
-        if not scrape_succeeded:
-            return False
+        if self.check_other_DB_entry(self.altDBname, self.altTable, 'Url', url):
+            scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
+            novel = NovelupdatesScraper()
+            novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags           
+        else:
+            novel = NovelupdatesScraper(url=url)
+            scrape_succeeded = novel.scrape_from_url()
+            if not scrape_succeeded:
+                return False
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
@@ -205,10 +212,15 @@ class StoreNovelData:
         if not self.exists_entry("ID", id) or not self.table_name:
             return False
         
-        novel = NovelupdatesScraper(url=url)
-        scrape_succeeded = novel.scrape_from_url()
-        if not scrape_succeeded:
-            return False
+        if self.check_other_DB_entry(self.altDBname, self.altTable, 'Url', url):
+            scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
+            novel = NovelupdatesScraper()
+            novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags           
+        else:
+            novel = NovelupdatesScraper(url=url)
+            scrape_succeeded = novel.scrape_from_url()
+            if not scrape_succeeded:
+                return False
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
@@ -259,6 +271,30 @@ class StoreNovelData:
                   f"ID-{self.DBname.replace('.db', '').replace('/','')}-{self.table_name}.ID")
         self = new_db
     
+    def check_other_DB_entry(self, altDB: str, altTable: str, col, val) -> bool:
+        # This alternate DB is only meant to store cached novels not part of the stored user experience to avoid needing
+        # to fetch requests from the actual Novelupdates site. This alternate DB should never be modified by production code and only
+        # done so manually from datasets found elsewhere
+        # An example data set is: https://github.com/shhossain/novelupdates-dataset
+        tmp = StoreNovelData(altDB)
+        table_exists = tmp.select_table(altTable)
+        if not table_exists:
+            return False
+        return tmp.exists_entry(col, val)
+    
+    def fetch_other_DB_entry(self, altDB: str, altTable: str, col, val):
+        # This alternate DB is only meant to store cached novels not part of the stored user experience to avoid needing
+        # to fetch requests from the actual Novelupdates site. This alternate DB should never be modified by production code and only
+        # done so manually from datasets found elsewhere
+        # An example data set is: https://github.com/shhossain/novelupdates-dataset
+        tmp = StoreNovelData(altDB)
+        table_exists = tmp.select_table(altTable)
+        if not table_exists:
+            return None
+        tmp2 = tmp.fetch_entry(col, val)
+        if tmp2:
+            return tmp2[0]
+    
     def close_database(self) -> None:
         """Self explanatory
         """
@@ -294,6 +330,6 @@ class IDTracker:
     def generate_new_ID(self) -> int:
         self.set_max_ID(self.max_ID + 1)
         return self.max_ID
-   
+    
 if __name__ == "__main__":
     pass
