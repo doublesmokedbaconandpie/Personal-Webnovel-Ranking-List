@@ -24,7 +24,7 @@ class StoreNovelData:
         """
         
         logging.info(f'__init__: {DBname}')
-        logging.info(f'Connecting to altDB: {altDBname}, altTable: {altTable}')
+        logging.info(f'__init__: Connecting to altDB: {altDBname}, altTable: {altTable}')
         self.DBname: str = DBname
         self.conn: sqlite3.Connection = sqlite3.connect(DBname)
         self.cursor: sqlite3.Cursor = self.conn.cursor()
@@ -100,25 +100,24 @@ class StoreNovelData:
         """
         logging.info(f'exists_entry')
         if not self.table_name or col not in self.valid_columns:
-            logging.info(f'Dont check exists: tablename: {self.table_name}, col: {col}')
+            logging.info(f'Exit exists_entry: tablename: {self.table_name}, col: {col}')
             return False
         params = (val,)
         result = self.cursor.execute(f"SELECT {col} FROM {self.table_name} WHERE {col}  = ?", params).fetchall()
-        logging.info(f'Checked entry: col: {col}, val: {val}, result: {result}')
+        logging.info(f'Return exists_entry: col: {col}, val: {val}, result: {result}')
         return bool(result)
     
     def add_entry(self, col, val) -> bool:
         logging.info('add_entry')
         if not self.table_name or col not in self.valid_columns:
-            logging.info(f'Dont check add entry: tablename: {self.table_name}, col: {col}')
+            logging.info(f'Exit add_entry: tablename: {self.table_name}, col: {col}')
             return False
         params = ['', '', '', '', '', '', '', '', date.today().strftime("%Y-%m-%d"), '', '']
         index = self.valid_columns.index(col)
         params[index] = val
         params[-1] = self.id_tracker.generate_new_ID()
         params = tuple(params)
-        logging.info(f'Col: {col}, val: {val}, index: {index}')
-        logging.info(f'Executing params: {params}')
+        logging.info(f'Return add_entry: Col: {col}, val: {val}, index: {index}, params: {params}')
         self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", params)
         self.conn.commit()
         return True
@@ -126,7 +125,7 @@ class StoreNovelData:
     def add_full_entry(self, row: NovelEntry) -> bool:
         logging.info('add_full_entry, row: {row}')
         if not self.table_name or not isinstance(row, NovelEntry):
-            logging.info(f'Dont add full entry: tablename: {self.table_name}, type(row): {type(row)}')
+            logging.info(f'Exit add_full_entry: tablename: {self.table_name}, type(row): {type(row)}')
             return False
         row.id = self.id_tracker.generate_new_ID()
         params = row.return_tuple_from_vals()
@@ -145,21 +144,21 @@ class StoreNovelData:
         """
         logging.info(f'add_entry_from_url: {url}')
         if self.exists_entry("Url", url) or not self.table_name:
-            logging.info(f'Dont add entry from url: tablename: {self.table_name}')
+            logging.info(f'Exit add_entry_from_url: tablename: {self.table_name}')
             return False
         
         novel = NovelupdatesScraper()
-        if self.check_other_DB_entry(self.altDBname, self.altTable, 'Url', url):
-            scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
-            novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags    
-            logging.info(f'Scraping info from local cache: altDB: {self.altDBname}, altTable: {self.altTable}')   
-            logging.info(f'Scrape info results: {scrape}')    
+        scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
+        if scrape:
+            novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags   
+            logging.info(f'Use local cache: altDB: {self.altDBname}, altTable: {self.altTable}')   
+            logging.info(f'Scrape info results: {scrape}')            
         else:
-            logging.info(f'Scraping info from web:')   
+            logging.info(f'Webscraping')   
             novel.url = url
             scrape_succeeded = novel.scrape_from_url()
             if not scrape_succeeded:
-                logging.info('Scrape failed')
+                logging.info(f'Webscrape failed')
                 return False
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
@@ -184,7 +183,7 @@ class StoreNovelData:
         """
         logging.info(f'delete_entry: col: {col}, val: {val}')
         if not self.exists_entry(col, val) or not self.table_name or col not in self.valid_columns:
-            logging.info(f'Dont delete entry: {self.table_name}')
+            logging.info(f'Exit delete_entry: {self.table_name}')
             return False
         
         params = (val, )
@@ -204,12 +203,12 @@ class StoreNovelData:
         """
         logging.info(f'fetch_entry: col: {col}, val: {val}')
         if not self.exists_entry(col, val) or not self.table_name:
-            logging.info(f'Dont fetch entry: tablename: {self.table_name}')
+            logging.info(f'Exit fetch_entry: tablename: {self.table_name}')
             return None
         
         params = (val, )
         raw_tuple_list = self.cursor.execute(f"SELECT * FROM {self.table_name} WHERE {col} = ?", params).fetchall()
-        logging.info(f'Fetched list with len: {len(raw_tuple_list)}')
+        logging.info(f'fetch_entry len: {len(raw_tuple_list)}')
         NovelEntryList = []
         for i, j in enumerate(raw_tuple_list):
             tmp = NovelEntry()
@@ -234,7 +233,7 @@ class StoreNovelData:
         
         logging.info(f'update_entry: id: {ID}, column: {column}, val: {val}')
         if column not in self.valid_columns or not self.exists_entry('ID', ID):
-            logging.info(f'Dont update entry')
+            logging.info(f'Exit update_entry')
             return False
         
         params = (val, ID)
@@ -245,23 +244,23 @@ class StoreNovelData:
     def update_entry_from_url(self, ID: int, url: str): 
         logging.info(f'update_entry_from_url: id: {ID}, url: {url}')
         if not self.exists_entry("ID", ID) or not self.table_name:
-            logging.info(f'Dont update entry from url: tablename {self.table_name}')
+            logging.info(f'Exit update_entry_from_url: tablename {self.table_name}')
             return False
         
         old: NovelEntry = self.fetch_entry("ID", ID)[0]
         logging.info(f'Old entry: {old}')
         novel = NovelupdatesScraper()
-        if self.check_other_DB_entry(self.altDBname, self.altTable, 'Url', url):
-            scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
+        scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
+        if scrape:
             novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags   
-            logging.info(f'Scraping info from local cache: altDB: {self.altDBname}, altTable: {self.altTable}')   
+            logging.info(f'Use local cache: altDB: {self.altDBname}, altTable: {self.altTable}')   
             logging.info(f'Scrape info results: {scrape}')            
         else:
-            logging.info(f'Scraping info from web:')   
+            logging.info(f'Webscraping')   
             novel.url = url
             scrape_succeeded = novel.scrape_from_url()
             if not scrape_succeeded:
-                logging.info(f'Scrape failed')
+                logging.info(f'Webscrape failed')
                 return False
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
@@ -279,7 +278,7 @@ class StoreNovelData:
         logging.info(f'add_column: column_name: {column_name}, type_name: {type_name}')
         valid_types = ('NULL', 'INTEGER', 'REAL', 'TEXT', 'BLOB')
         if column_name not in self.valid_columns or type_name not in valid_types:
-            logging.info('Dont add column')
+            logging.info('Exit add_column')
             return False
         
         self.cursor.execute(f"ALTER TABLE {self.table_name} ADD {column_name} {type_name}")
@@ -288,7 +287,7 @@ class StoreNovelData:
     
     def set_id_tracker(self) -> None:
         self.id_tracker = IDTracker(filename=f"ID-{self.DBname.replace('.db', '').replace('/','')}-{self.table_name}.ID")
-        logging.info(f'Init id tracker: {self.id_tracker}')
+        logging.info(f'set_id_tracker: {self.id_tracker}')
     
     def dump_table_to_list(self) -> list:
         if not self.table_name:
@@ -317,32 +316,17 @@ class StoreNovelData:
                   f"ID-{self.DBname.replace('.db', '').replace('/','')}-{self.table_name}.ID")
         self = new_db
     
-    def check_other_DB_entry(self, altDB: str, altTable: str, col, val) -> bool:
-        # This alternate DB is only meant to store cached novels not part of the stored user experience to avoid needing
-        # to fetch requests from the actual Novelupdates site. This alternate DB should never be modified by production code and only
-        # done so manually from datasets found elsewhere
-        # An example data set is: https://github.com/shhossain/novelupdates-dataset
-        logging.info('Check other DB entry')
-        tmp = StoreNovelData(altDB)
-        table_exists = tmp.select_table(altTable)
-        if not table_exists:
-            logging.info(f'Alt table doesnt exist: {altTable}')
-            return False
-        logging.info(f'Alt table exists: {altTable}')
-        return tmp.exists_entry(col, val)
-    
     def fetch_other_DB_entry(self, altDB: str, altTable: str, col, val):
         # This alternate DB is only meant to store cached novels not part of the stored user experience to avoid needing
         # to fetch requests from the actual Novelupdates site. This alternate DB should never be modified by production code and only
         # done so manually from datasets found elsewhere
         # An example data set is: https://github.com/shhossain/novelupdates-dataset
-        logging.info('Fetch other DB entry')
+        logging.info('fetch_other_DB_entry')
         tmp = StoreNovelData(altDB)
         table_exists = tmp.select_table(altTable)
         if not table_exists:
             logging.info(f'Alt table doesnt exist: {altTable}')
             return None
-        logging.info(f'Alt table exists: {altTable}')
         tmp2 = tmp.fetch_entry(col, val)
         logging.info(f'Fetched Alt table value: {tmp2}')
         if tmp2:
@@ -377,13 +361,13 @@ class IDTracker:
     def set_max_ID(self, val) -> None:
         if not isinstance(val, int):
             raise TypeError(f'Set_max_ID can only set integers as ID, not "{val}"')
-        logging.info(f'Set max id: {val}')
+        logging.info(f'set_max_ID: {val}')
         self.max_ID = val
         with open(self.filename, 'w') as f:
             f.write(str(val))
             
     def generate_new_ID(self) -> int:
-        logging.info(f'Generate new id')
+        logging.info(f'generate_new_ID')
         self.set_max_ID(self.max_ID + 1)
         return self.max_ID
     
