@@ -127,12 +127,12 @@ class StoreNovelData:
         if self.exists_entry("Url", url) or not self.table_name:
             return False
         
+        novel = NovelupdatesScraper()
         if self.check_other_DB_entry(self.altDBname, self.altTable, 'Url', url):
             scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
-            novel = NovelupdatesScraper()
             novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags           
         else:
-            novel = NovelupdatesScraper(url=url)
+            novel.url = url
             scrape_succeeded = novel.scrape_from_url()
             if not scrape_succeeded:
                 return False
@@ -140,7 +140,8 @@ class StoreNovelData:
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
         new_id = self.id_tracker.generate_new_ID()
-        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '', new_id)
+        params = (url, novel.country, novel.title, '', '', '',
+                  str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '', new_id)
         self.cursor.execute(f"INSERT INTO {self.table_name} VALUES(?,?,?,?,?,?,?,?,?,?,?)", params)
         self.conn.commit()
         return True
@@ -212,19 +213,21 @@ class StoreNovelData:
         if not self.exists_entry("ID", id) or not self.table_name:
             return False
         
+        old: NovelEntry = self.fetch_entry("ID", id)[0]
+        novel = NovelupdatesScraper()
         if self.check_other_DB_entry(self.altDBname, self.altTable, 'Url', url):
             scrape = self.fetch_other_DB_entry(self.altDBname, self.altTable, 'Url', url)
-            novel = NovelupdatesScraper()
             novel.country, novel.title, novel.genre, novel.tags = scrape.country, scrape.title, scrape.genre, scrape.tags           
         else:
-            novel = NovelupdatesScraper(url=url)
+            novel.url = url
             scrape_succeeded = novel.scrape_from_url()
             if not scrape_succeeded:
                 return False
         
         # (Url TEXT, Country TEXT, Title TEXT, ChaptersCompleted TEXT, Rating INTEGER,
         # ReadingStatus TEXT, Genre TEXT, Tags TEXT, DateModified TEXT, Notes TEXT)
-        params = (url, novel.country, novel.title, '', '', '', str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), '', id)
+        params = (url, novel.country, novel.title, old.chapters_completed, old.rating, old.reading_status,
+                  str(novel.genre), str(novel.tags), date.today().strftime("%Y-%m-%d"), old.notes, id)
         self.cursor.execute(f"UPDATE {self.table_name} SET \
                             Url = ?, Country = ?, Title = ?, ChaptersCompleted = ?, Rating = ?, ReadingStatus = ?, \
                             Genre = ?, Tags = ?, DateModified = ?, Notes = ?\
