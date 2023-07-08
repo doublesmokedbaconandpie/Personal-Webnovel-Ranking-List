@@ -23,7 +23,7 @@ class StoreNovelData:
             DBname (str): name of database
         """
         
-        logging.info(f'Connecting to DB: {DBname}')
+        logging.info(f'__init__: {DBname}')
         logging.info(f'Connecting to altDB: {altDBname}, altTable: {altTable}')
         self.DBname: str = DBname
         self.conn: sqlite3.Connection = sqlite3.connect(DBname)
@@ -45,7 +45,7 @@ class StoreNovelData:
         Returns:
             bool: whether the table was selected
         """
-        logging.info(f'Selecting table: {table_name}')
+        logging.info(f'select_table: {table_name}')
         if not self.table_exists(table_name):
             return False
         self.table_name = table_name
@@ -63,7 +63,7 @@ class StoreNovelData:
             bool: whether a new table is added
         """
         
-        logging.info(f'Creating table: {table_name}')
+        logging.info(f'create_table: {table_name}')
         if self.table_exists(table_name):
             return False
         self.cursor.execute(f'''CREATE TABLE {table_name} (
@@ -81,7 +81,7 @@ class StoreNovelData:
         Returns:
             bool: whether a table was deleted or not
         """
-        logging.info(f'Deleting table: {table_name}')
+        logging.info(f'delete_table: {table_name}')
         if not self.table_exists(table_name):
             return False
         
@@ -98,7 +98,7 @@ class StoreNovelData:
             col: column in DB
             val: value for respective column        
         """
-        logging.info(f'Exists entry')
+        logging.info(f'exists_entry')
         if not self.table_name or col not in self.valid_columns:
             logging.info(f'Dont check exists: tablename: {self.table_name}, col: {col}')
             return False
@@ -108,7 +108,7 @@ class StoreNovelData:
         return bool(result)
     
     def add_entry(self, col, val) -> bool:
-        logging.info('Add entry')
+        logging.info('add_entry')
         if not self.table_name or col not in self.valid_columns:
             logging.info(f'Dont check add entry: tablename: {self.table_name}, col: {col}')
             return False
@@ -124,9 +124,9 @@ class StoreNovelData:
         return True
     
     def add_full_entry(self, row: NovelEntry) -> bool:
-        logging.info('Add full entry')
+        logging.info('add_full_entry, row: {row}')
         if not self.table_name or not isinstance(row, NovelEntry):
-            logging.info(f'Dont add full entry: tablename: {self.table_name},  row: {row}, type(row): {type(row)}')
+            logging.info(f'Dont add full entry: tablename: {self.table_name}, type(row): {type(row)}')
             return False
         row.id = self.id_tracker.generate_new_ID()
         params = row.return_tuple_from_vals()
@@ -143,7 +143,7 @@ class StoreNovelData:
         Returns:
             bool: Whether the url was successfully added to the table
         """
-        logging.info(f'Add entry from url: {url}')
+        logging.info(f'add_entry_from_url: {url}')
         if self.exists_entry("Url", url) or not self.table_name:
             logging.info(f'Dont add entry from url: tablename: {self.table_name}')
             return False
@@ -182,7 +182,7 @@ class StoreNovelData:
         Returns:
             bool: Whether the url was successfully deleted from the table
         """
-        logging.info(f'Delete entry: col: {col}, val: {val}')
+        logging.info(f'delete_entry: col: {col}, val: {val}')
         if not self.exists_entry(col, val) or not self.table_name or col not in self.valid_columns:
             logging.info(f'Dont delete entry: {self.table_name}')
             return False
@@ -202,7 +202,7 @@ class StoreNovelData:
         Returns:
             list: [(Tuple of column data entries)], None if not found
         """
-        logging.info(f'Fetch entry: col: {col}, val: {val}')
+        logging.info(f'fetch_entry: col: {col}, val: {val}')
         if not self.exists_entry(col, val) or not self.table_name:
             logging.info(f'Dont fetch entry: tablename: {self.table_name}')
             return None
@@ -232,7 +232,7 @@ class StoreNovelData:
         
         # Note there is no type checking
         
-        logging.info(f'Update entry: id: {ID}, column: {column}, val: {val}')
+        logging.info(f'update_entry: id: {ID}, column: {column}, val: {val}')
         if column not in self.valid_columns or not self.exists_entry('ID', ID):
             logging.info(f'Dont update entry')
             return False
@@ -243,7 +243,7 @@ class StoreNovelData:
         return True
     
     def update_entry_from_url(self, ID: int, url: str): 
-        logging.info(f'Update entry from url: id: {ID}, url: {url}')
+        logging.info(f'update_entry_from_url: id: {ID}, url: {url}')
         if not self.exists_entry("ID", ID) or not self.table_name:
             logging.info(f'Dont update entry from url: tablename {self.table_name}')
             return False
@@ -276,7 +276,7 @@ class StoreNovelData:
         return True
     
     def add_column(self, column_name: str, type_name: str) -> bool:
-        logging.info(f'Add column: column_name: {column_name}, type_name: {type_name}')
+        logging.info(f'add_column: column_name: {column_name}, type_name: {type_name}')
         valid_types = ('NULL', 'INTEGER', 'REAL', 'TEXT', 'BLOB')
         if column_name not in self.valid_columns or type_name not in valid_types:
             logging.info('Dont add column')
