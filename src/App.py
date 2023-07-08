@@ -9,8 +9,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    db = StoreNovelData('App.db')
     table_name = 'Webnovels'
+    db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
     db.select_table(table_name)
     
     entries = db.dump_table_to_list()
@@ -19,7 +19,7 @@ def index():
 @app.route('/editCell', methods=['POST', 'GET'])
 def saveEditCell():
     if request.method == 'POST':
-        db = StoreNovelData('App.db')
+        db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
         table_name = 'Webnovels'
         db.select_table(table_name)
         
@@ -44,7 +44,7 @@ def saveEditCell():
 @app.route('/fetchScrapedRow', methods=['POST'])
 def fetchScrapedRow():
     if request.method == 'POST':
-        db = StoreNovelData('App.db')
+        db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
         table_name = 'Webnovels'
         db.select_table(table_name)
         
