@@ -70,6 +70,7 @@ function createCellDelete(cell) {
     var button = document.createElement('button');
     button.setAttribute('class', 'deleteRow');
     button.innerHTML = 'Delete Row';
+    button.addEventListener('click', deleteRowbutton);
     div.appendChild(button);
 
     cell.setAttribute("class", "col11");
