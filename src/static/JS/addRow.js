@@ -64,6 +64,7 @@ function createCellCol2(cell) {
 
 
 function checkLastRowEmpty(table){
+    // bugged on title and url
     var last_row = table.rows[table.rows.length - 1];
     for (let i = 1; i < 10; i++) {
         let inner_div = last_row.cells[i].children[0];
@@ -76,5 +77,5 @@ function checkLastRowEmpty(table){
 
 function getMaxId() {
     let last_row = table.rows[table.rows.length - 1];
-    return parseInt(last_row.cells[10].children[0].innerHTML);
+    return parseInt(getValsFromRow(last_row)['id']);
 }
