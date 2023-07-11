@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{title_name}} - List</title>
-        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="static/CSS/style.css">
     </head>
     <body>
@@ -13,14 +12,15 @@
             <colgroup>
                 <col style = "width:5%">
                 <col style = "width:5%">
-                <col style = "width:15%">
+                <col style = "width:14%">
                 <col style = "width:8%">
                 <col style = "width:7%">
                 <col style = "width:5%">
-                <col style = "width:15%">
-                <col style = "width:15%">
+                <col style = "width:14%">
+                <col style = "width:14%">
                 <col style = "width:10%">
-                <col style = "width:15%">
+                <col style = "width:14%">
+                <col>
             </colgroup>
             <thead>
                 <tr class="HeaderRow">
@@ -35,6 +35,7 @@
                     <th class= "col8">Date Modified</th>
                     <th class= "col9">Notes</th>
                     <th class = "col10">ID</th> 
+                    <th class = "col11">Delete Row</th> 
                 </tr>
             </thead>
             <tbody>
@@ -56,10 +57,13 @@
                     <td class = "col8"><div class = "scrollable">{{entry.date_modified}}</div></td>
                     <td contenteditable="true" class = "col9"><div class = "scrollable">{{entry.notes}}</div></td>
                     <td class = "col10"><div class = "scrollable">{{entry.id}}</div></td>
+                    <td class = "col11"><div><button type="button" class='deleteRow'>Delete Row</button></div></td>
                 </tr>
                 {% endfor %}
             </tbody>
     </body>
+    <script src="static/JS/helperFuncs.js"></script>
     <script src="static/JS/editCell.js"></script>
-    <script src="static/JS/editRows.js"></script>
+    <script src="static/JS/addRow.js"></script>
+    <script src="static/JS/deleteRow.js"></script>
 </html>

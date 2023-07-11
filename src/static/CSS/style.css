@@ -7,13 +7,13 @@ body {
 table {
     width: 90%;
     border: solid 2px black;
-    padding: 15px;
+    padding: 0px;
     table-layout: fixed;
     text-align: center;
 }
 
 .scrollable {
-    height: 80px;
+    height: 35px;
     overflow: auto;
 } 
 
@@ -78,6 +78,10 @@ table {
     border: 0px;
 }
 
+.col11 {
+    background-color: brown;
+}
+
 /* Dropdown Content (Hidden by Default) */
 .col2dropdown {
     display: none;
@@ -96,10 +100,9 @@ table {
     display: block;
   }
 
-/* 
 .col2:hover .col2dropdown {
     box-shadow: inset #54b3d6; 
     color: white;
     display: block;
-    translate: 0% -80%;
-} */
+    translate: 0% 50%;
+}

@@ -1,10 +1,10 @@
-const table = document.getElementById("NovelTable");
 var Max_ID = getMaxId();
 
 document.getElementById("addRow")
         .addEventListener("click", addRowClick);
 
 function addRowClick() {
+    const table = document.getElementById("NovelTable");
     if (checkLastRowEmpty(table)) {return;}
     row = table.insertRow(table.rows.length);
     for (let i = 0; i < table.rows[0].cells.length; i++) {
@@ -12,7 +12,7 @@ function addRowClick() {
             createCell(row.insertCell(i), `${table.rows.length - 1}.`, 'col0', false);
             continue;}
         if (i == 2) {
-            createCellCol2(row.insertCell(i));
+            createCellTitleUrl(row.insertCell(i));
             continue;}
         if (i == 8) {
             createCell(row.insertCell(i), "", 'col8', false);
@@ -20,8 +20,11 @@ function addRowClick() {
         if (i == 10) {
             createCell(row.insertCell(i), Max_ID + 1, 'col10', false);
             Max_ID += 1;
-            continue;
-        }
+            continue;}
+        if (i == 11) {
+            createCellDelete(row.insertCell(i));
+            Max_ID += 1;
+            continue;}
         createCell(row.insertCell(i), "", `col${i}`, true);
     }
 }    
@@ -40,7 +43,7 @@ function createCell(cell, text, class_name, content_editable) {
     return cell;
 }
 
-function createCellCol2(cell) {
+function createCellTitleUrl(cell) {
     var div1 = document.createElement('div');
     var txt1 = document.createElement('a');
     txt1.setAttribute('href', '');
@@ -62,19 +65,31 @@ function createCellCol2(cell) {
     return cell;
 }
 
+function createCellDelete(cell) {
+    var div = document.createElement('div');
+    var button = document.createElement('button');
+    button.setAttribute('class', 'deleteRow');
+    button.innerHTML = 'Delete Row';
+    button.addEventListener('click', deleteRowbutton);
+    div.appendChild(button);
+
+    cell.setAttribute("class", "col11");
+    cell.appendChild(div);
+    return cell;
+}
 
 function checkLastRowEmpty(table){
     var last_row = table.rows[table.rows.length - 1];
-    for (let i = 1; i < 10; i++) {
-        let inner_div = last_row.cells[i].children[0];
-        if (inner_div.innerHTML != "") {
-            return false;
-        }
+    RowData = getValsFromRow(last_row);
+    for (const [key, value] of Object.entries(RowData)) {
+        if (key == 'id' || key == 'number') {continue;}
+        if (value != '') {return false;}
     }
     return true;
 }
 
 function getMaxId() {
+    const table = document.getElementById("NovelTable");
     let last_row = table.rows[table.rows.length - 1];
-    return parseInt(last_row.cells[10].children[0].innerHTML);
+    return parseInt(getValsFromRow(last_row)['id']);
 }
