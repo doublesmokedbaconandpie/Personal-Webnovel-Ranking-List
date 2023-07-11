@@ -31,7 +31,7 @@ def saveEditCell():
         post_json = request.get_json()
         id, col, val, date_val = int(post_json['id']), post_json['col'], post_json['val'], post_json['date_val']
         col_num = NovelEntry.get_col_num(col)
-        logging.info(f'id:{id}, col:{col}, val:{val}, date_val:{date_val}, col_num:{col_num}')
+        logging.info(f'id: {id}, col: {col}, val: {val}, date_val: {date_val}, col_num: {col_num}')
         
         if id > db.id_tracker.max_ID + 1:
             return {'result': 'false', 'error': 'Invalid ID'} 
@@ -82,3 +82,26 @@ def fetchScrapedRow():
                 'tags': data.tags,
                 'date_modified': data.date_modified,
                 'id': data.id} 
+
+@app.route('/deleteRow', methods=['POST'])
+def deleteRow():
+    if request.method == 'POST':
+        logging.info('Post request for deleteRow')
+        db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
+        table_name = 'Webnovels'
+        db.select_table(table_name)
+        
+        post_json = request.get_json()
+        id = int(post_json['id'])
+        logging.info(f'id: {id}')
+        
+        delete_attempt = db.delete_entry('ID', id)
+        logging.info(f'Delete attempt: {delete_attempt}')
+        
+        if delete_attempt:
+            return {'result': 'true'}
+        return {'result': 'false', 'error': 'Invalid ID'} 
+
+if __name__ == "__main__":
+    app.debug = False
+    app.run()

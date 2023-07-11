@@ -52,7 +52,7 @@ async function exitLinkEditor(evt) {
     setRowValue(row, 'url', linkText);
     cell.removeChild(evt.target);
 
-    const send_get = await retrieveDataFromServer(id, linkText);
+    const send_get = await retrieveScrapedRow(id, linkText);
     if (send_get['result'] == 'true') {
         console.log("%c editing after scraping", "color:brown;");
         setRowValue(row, 'country', send_get['country']);
@@ -66,13 +66,13 @@ async function exitLinkEditor(evt) {
 
     console.log('doing the other one!');
     console.log(send_get['result'])
-    const server_success = await sendDataToServer(id, "Url", linkText, new_date_val);
+    const server_success = await sendUrlToServer(id, "Url", linkText, new_date_val);
     if (server_success['result'] == 'true') {  
         setRowValue(row, 'date_modified', getCurrDate());
     }
 }
 
-async function retrieveDataFromServer(id, url) {
+async function retrieveScrapedRow(id, url) {
     console.log(`Sending id ${id} and url ${url}`);
     const send_get = await fetch(`/fetchScrapedRow`, {
         method: "POST",
@@ -85,7 +85,7 @@ async function retrieveDataFromServer(id, url) {
     })
         .then(response => response.json());
     
-    console.log("%c Get Data", "color:yellow;")
+    console.log("%c retrieveScrapedRowFromServer", "color:yellow;")
     console.log({send_get});  
     return send_get;
 }
@@ -106,13 +106,13 @@ async function saveEditCell(evt){
         }
     }
 
-    const send_post = await sendDataToServer(id, col, val, new_date_val);
+    const send_post = await updateServerUrl(id, col, val, new_date_val);
     if (send_post['result'] == 'true') { 
         setRowValue(row, 'date_modified', getCurrDate())
     }
 }
 
-async function sendDataToServer(id, col, val, date_val) {
+async function updateServerUrl(id, col, val, date_val) {
     const send_post = await fetch(`/editCell`, {
         method: "POST",
         headers: {
@@ -126,18 +126,9 @@ async function sendDataToServer(id, col, val, date_val) {
         })
         .then(response => response.json());
 
-    console.log("%c Post Data", "color:purple;")
+    console.log("%c updateServerUrl", "color:purple;")
     console.log({id, col, val, date_val, send_post});  
     return send_post;
-}
-
-function getDivCurrDate() {
-    let currentDate = getCurrDate();
-
-    var div = document.createElement('div');
-    div.setAttribute('class', "scrollable");
-    div.innerHTML = currentDate;
-    return div;
 }
 
 function getCurrDate() {
@@ -154,11 +145,11 @@ function getCurrDate() {
     return `${year}-${month}-${day}`;
 }
 
-
 // delete rows
-// url dropdown
+// edit history
 // sort
 // find
 // UI touches
 // On focus extend row
+// URL dropdown
 // drag rows?
