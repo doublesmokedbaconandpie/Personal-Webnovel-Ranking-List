@@ -16,25 +16,6 @@ function sortRows(evt) {
     const colName = indexToCol(index);
 
     newRows = mergeSort(newRows, mult, colName);
-
-    // newRows.sort(function(rowA, rowB) {
-    //     const cellA = getValsFromRow(rowA)[colName];
-    //     const cellB = getValsFromRow(rowB)[colName];
-
-    //     switch(true) {
-    //         case cellA === cellB:
-    //             return 0;
-    //         case cellA === "":
-    //             return 1;
-    //         case cellB === "":
-    //             return -1;
-    //         case cellA > cellB:
-    //             return mult;
-    //         case cellB > cellA:
-    //             return -1 * mult;
-
-    //     }
-    // }); 
     
     rows.forEach(row => {
         tableBody.removeChild(row);
@@ -55,7 +36,7 @@ function mergeSort(arr, mult, colName) {
     var left   = arr.slice(0, middle);
     var right  = arr.slice(middle, arr.length);
 
-    return merge(mergeSort(left), mergeSort(right), mult, colName);
+    return merge(mergeSort(left, mult, colName), mergeSort(right, mult, colName), mult, colName);
 }
 
 function merge(left, right, mult, colName)
@@ -69,9 +50,19 @@ function merge(left, right, mult, colName)
         if (cellA <= cellB) {noSwap = 1 * mult;} 
         else {noSwap = -1 * mult;}
 
-        if (noSwap == 1) {result.push(left.shift());}
+        if (cellB === "") {noSwap = -1 * mult;}
+        else if (cellA === "") {noSwap = 1 * mult;}
+
+        if (typeof(cellA) != typeof(cellB)) {
+            if (typeof(cellA) === 'string') {noSwap = 1 * mult;}
+            else {noSwap = -1 * mult;}
+        }
+
+        console.log(cellA, cellB, cellA <= cellB, cellB < cellA, noSwap, mult)
+
+        if (noSwap == 1) {
+            result.push(left.shift());}
         else {result.push(right.shift());}
-        
     }
 
     while (left.length) {result.push(left.shift())};

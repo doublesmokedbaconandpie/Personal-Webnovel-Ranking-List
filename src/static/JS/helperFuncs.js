@@ -13,7 +13,10 @@ function getValsFromRow(row) {
     notes = row.cells[9].children[0].innerHTML;
     id = row.cells[10].children[0].innerHTML;
 
-    number = parseInt(number);
+    if (parseInt(number)) {number = parseInt(number);}
+    if (parseInt(rating)) {rating = parseInt(rating);}
+    if (parseInt(chapters_completed)) {chapters_completed = parseInt(chapters_completed);}
+    console.log(chapters_completed);
 
     return {'number': number,
             'country': country,
