@@ -17,6 +17,10 @@ table {
     overflow: auto;
 } 
 
+.headcol:hover {
+    cursor: grab;
+}
+
 #addRow {
     border: 0;
     line-height: 2.5;

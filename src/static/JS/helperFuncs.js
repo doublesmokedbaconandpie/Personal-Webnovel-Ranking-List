@@ -13,6 +13,8 @@ function getValsFromRow(row) {
     notes = row.cells[9].children[0].innerHTML;
     id = row.cells[10].children[0].innerHTML;
 
+    number = parseInt(number);
+
     return {'number': number,
             'country': country,
             'title': title,
@@ -57,4 +59,20 @@ function setRowValue(row, col, val) {
         return;
     }
     console.log('Something went wrong');
+}
+
+function indexToCol(index) {
+    cols_to_indices = {'number': 0,
+                       'country': 1,
+                       'title': 2,
+                       'url': 2,
+                       'chapters_completed': 3,
+                       'rating': 4,
+                       'reading_status': 5,
+                       'genre': 6,
+                       'tags': 7,
+                       'date_modified': 8,
+                       'notes': 9,
+                       'id': 10}
+    return Object.keys(cols_to_indices).find(key => cols_to_indices[key] === index);
 }
