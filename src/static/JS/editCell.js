@@ -97,9 +97,9 @@ async function saveEditCell(evt){
     let col;
     let new_date_val = getCurrDate();
 
-    for (let i = 0; i < row.cells.length; i++) {
-        if (row.cells[i] == evt.target) {
-            val = row.cells[i].children[0].innerHTML;
+    for (let i = 0, cell; cell = row.cells[i]; i++) {
+        if (cell == evt.target) {
+            val = cell.children[0].innerHTML;
             col = row.parentElement.parentElement.rows[0].cells[i].innerHTML;
             if (val == "<br>") {val = "";}
             break;
