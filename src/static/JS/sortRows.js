@@ -1,24 +1,25 @@
 // choose column to go sort with 
 document.querySelectorAll('.headcol')
         .forEach(e => e.addEventListener('click', sortRows));
-
+document.querySelector('.headcol.col4').click();
+document.querySelector('.headcol.col4').click();
 
 function sortRows(evt) {
     const headers = evt.target.parentElement;
     const table = document.getElementById("NovelTable");
     const tableBody = table.querySelector('tbody');
-    const rows = table.querySelectorAll('tr:not(.HeaderRow)');
-    var newRows = Array.from(rows);
+    const rows = table.querySelectorAll('.dataRow');
+    let newRows = Array.from(rows);
 
-    var tmp = getMultIndexfromCol(evt.target, headers);
+    const tmp = getMultIndexfromCol(evt.target, headers);
     const mult = tmp['mult'];
     const index = tmp['index'];
     const colName = indexToCol(index);
 
     newRows = mergeSort(newRows, mult, colName);
     newRows.forEach(function(row, i) {
-        setRowValue(row, 'number', `${i + 1}.`)
-    })
+        setRowValue(row, 'number', `${i + 1}.`);
+    });
 
     rows.forEach(row => {
         tableBody.removeChild(row);
@@ -34,19 +35,19 @@ function sortRows(evt) {
 function mergeSort(arr, mult, colName) {
     if (arr.length < 2) {return arr;}
     
-    var middle = Math.floor(arr.length / 2);
-    var left   = arr.slice(0, middle);
-    var right  = arr.slice(middle, arr.length);
+    const middle = Math.floor(arr.length / 2);
+    const left   = arr.slice(0, middle);
+    const right  = arr.slice(middle, arr.length);
 
     return merge(mergeSort(left, mult, colName), mergeSort(right, mult, colName), mult, colName);
 }
 
 function merge(left, right, mult, colName)
 {
-    var result = [];
-    var noSwap;
-    var i = 0;
-    var j = 0;
+    const result = [];
+    let noSwap;
+    let i = 0;
+    let j = 0;
 
     while (i < left.length && j < right.length) {
         const cellA = getValsFromRow(left[i])[colName];
@@ -81,13 +82,13 @@ function merge(left, right, mult, colName)
 }
 
 function getMultIndexfromCol(col, headers) {
-    var mult;
+    let mult;
     class_names = col.getAttribute('class');
     if (class_names.includes("sortnone") || class_names.includes("sortneg")) {mult = 1;}
     else if (class_names.includes('sortpos')) {mult = -1;}
     else {mult = 0;}
 
-    var index;
+    let index;
     for (let i = 0, cell; cell = headers.cells[i]; i++) {
         if (cell == col) {
             index = i;
@@ -100,7 +101,7 @@ function getMultIndexfromCol(col, headers) {
 }
 
 function changeColClassName(col) {
-    var origClass, newClass;
+    let origClass, newClass;
     class_names = col.getAttribute('class');
     if (class_names.includes('sortnone')) {
         origClass = 'sortnone';
@@ -112,6 +113,6 @@ function changeColClassName(col) {
         origClass = 'sortpos';
         newClass = 'sortneg';}
 
-    var fullClasses = class_names.replace(origClass, newClass);
+    const fullClasses = class_names.replace(origClass, newClass);
     col.setAttribute('class', fullClasses);
 }

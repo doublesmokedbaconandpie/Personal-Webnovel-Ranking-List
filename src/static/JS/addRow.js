@@ -6,7 +6,8 @@ document.getElementById("addRow")
 function addRowClick() {
     const table = document.getElementById("NovelTable");
     if (checkLastRowEmpty(table)) {return;}
-    row = table.insertRow(table.rows.length);
+    let row = table.insertRow(table.rows.length);
+    row.setAttribute('class', 'dataRow');
     for (let i = 0; i < table.rows[0].cells.length; i++) {
         if (i == 0) {
             createCell(row.insertCell(i), `${table.rows.length - 1}.`, 'col0', false);
@@ -30,7 +31,7 @@ function addRowClick() {
 }    
 
 function createCell(cell, text, class_name, content_editable) {
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     var txt = document.createTextNode(text);
     div.appendChild(txt);
     div.setAttribute('class', "scrollable");
@@ -44,15 +45,15 @@ function createCell(cell, text, class_name, content_editable) {
 }
 
 function createCellTitleUrl(cell) {
-    var div1 = document.createElement('div');
-    var txt1 = document.createElement('a');
+    let div1 = document.createElement('div');
+    let txt1 = document.createElement('a');
     txt1.setAttribute('href', '');
     div1.appendChild(txt1);
     div1.setAttribute('class', "scrollable");
     div1.setAttribute("contenteditable", "true");
 
-    var div2 = document.createElement('div');
-    var txt2 = document.createElement('a');
+    let div2 = document.createElement('div');
+    let txt2 = document.createElement('a');
     txt2.setAttribute('href', '');
     div2.appendChild(txt2);
     div2.setAttribute('class', "col2dropdown");
@@ -66,8 +67,8 @@ function createCellTitleUrl(cell) {
 }
 
 function createCellDelete(cell) {
-    var div = document.createElement('div');
-    var button = document.createElement('button');
+    let div = document.createElement('div');
+    let button = document.createElement('button');
     button.setAttribute('class', 'deleteRow');
     button.innerHTML = 'Delete Row';
     button.addEventListener('click', deleteRowbutton);
@@ -79,8 +80,8 @@ function createCellDelete(cell) {
 }
 
 function checkLastRowEmpty(table){
-    var last_row = table.rows[table.rows.length - 1];
-    RowData = getValsFromRow(last_row);
+    const last_row = table.rows[table.rows.length - 1];
+    const RowData = getValsFromRow(last_row);
     for (const [key, value] of Object.entries(RowData)) {
         if (key == 'id' || key == 'number') {continue;}
         if (value != '') {return false;}
@@ -90,6 +91,6 @@ function checkLastRowEmpty(table){
 
 function getMaxId() {
     const table = document.getElementById("NovelTable");
-    let last_row = table.rows[table.rows.length - 1];
+    const last_row = table.rows[table.rows.length - 1];
     return parseInt(getValsFromRow(last_row)['id']);
 }
