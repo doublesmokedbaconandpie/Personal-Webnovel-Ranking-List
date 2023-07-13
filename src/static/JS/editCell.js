@@ -21,17 +21,17 @@ async function editLinkCell(evt) {
     console.log("%c editLinkCell", "color:red;");
     console.log(evt);
 
-    var cell = evt.target.parentElement;
-    var row = cell.parentElement;
-    var linkText = getValsFromRow(row)['url'];
-    var linkEditor = createLinkEditor(linkText);
+    const cell = evt.target.parentElement;
+    const row = cell.parentElement;
+    const linkText = getValsFromRow(row)['url'];
+    const linkEditor = createLinkEditor(linkText);
     cell.appendChild(linkEditor);
     linkEditor.focus();
 }
 
 function createLinkEditor(text) {
-    var div = document.createElement('div');
-    var txt = document.createTextNode(text);
+    const div = document.createElement('div');
+    const txt = document.createTextNode(text);
     div.appendChild(txt);
     div.setAttribute("class", 'link-editor');
     div.setAttribute("contenteditable", "true");
@@ -43,11 +43,11 @@ async function exitLinkEditor(evt) {
     console.log("%c exitLinkEditor", "color:blue;");
     console.log(evt);
 
-    var cell = evt.target.parentElement;
-    var row = cell.parentElement;
-    var linkText = evt.target.innerHTML;
-    let id = getValsFromRow(row)['id'];
-    let new_date_val = getCurrDate();
+    const cell = evt.target.parentElement;
+    const row = cell.parentElement;
+    const linkText = evt.target.innerHTML;
+    const id = getValsFromRow(row)['id'];
+    const new_date_val = getCurrDate();
 
     setRowValue(row, 'url', linkText);
     cell.removeChild(evt.target);
@@ -64,9 +64,9 @@ async function exitLinkEditor(evt) {
         return;
     }
 
-    console.log('doing the other one!');
+    console.log('Scrape failed, just sending url');
     console.log(send_get['result'])
-    const server_success = await sendUrlToServer(id, "Url", linkText, new_date_val);
+    const server_success = await updateServerUrl(id, "Url", linkText, new_date_val);
     if (server_success['result'] == 'true') {  
         setRowValue(row, 'date_modified', getCurrDate());
     }
@@ -91,12 +91,12 @@ async function retrieveScrapedRow(id, url) {
 }
 
 async function saveEditCell(evt){
-    var row = evt.target.parentElement;
-    let id = getValsFromRow(row)['id'];
+    const row = evt.target.parentElement;
+    const id = getValsFromRow(row)['id'];
+    const new_date_val = getCurrDate();
+
     let val;
     let col;
-    let new_date_val = getCurrDate();
-
     for (let i = 0, cell; cell = row.cells[i]; i++) {
         if (cell == evt.target) {
             val = cell.children[0].innerHTML;
@@ -135,7 +135,7 @@ function getCurrDate() {
     const date = new Date();
     let day = date.getDate();
     let month = date.getMonth() + 1;
-    let year = date.getFullYear();
+    const year = date.getFullYear();
     if (String(month).length == 1) {
         month = `0${month}`
     }

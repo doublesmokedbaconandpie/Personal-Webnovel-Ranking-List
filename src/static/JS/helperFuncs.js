@@ -1,17 +1,17 @@
 
 function getValsFromRow(row) {
-    number = row.cells[0].children[0].innerHTML;
-    country = row.cells[1].children[0].innerHTML;
-    title = row.cells[2].children[0].children[0].innerHTML;
-    url = row.cells[2].children[0].children[0].getAttribute("href");
-    chapters_completed = row.cells[3].children[0].innerHTML;
-    rating = row.cells[4].children[0].innerHTML
-    reading_status = row.cells[5].children[0].innerHTML;
-    genre = row.cells[6].children[0].innerHTML;
-    tags = row.cells[7].children[0].innerHTML;
-    date_modified = row.cells[8].children[0].innerHTML;
-    notes = row.cells[9].children[0].innerHTML;
-    id = row.cells[10].children[0].innerHTML;
+    let number = row.cells[0].children[0].innerHTML;
+    let country = row.cells[1].children[0].innerHTML;
+    let title = row.cells[2].children[0].children[0].innerHTML;
+    let url = row.cells[2].children[0].children[0].getAttribute("href");
+    let chapters_completed = row.cells[3].children[0].innerHTML;
+    let rating = row.cells[4].children[0].innerHTML
+    let reading_status = row.cells[5].children[0].innerHTML;
+    let genre = row.cells[6].children[0].innerHTML;
+    let tags = row.cells[7].children[0].innerHTML;
+    let date_modified = row.cells[8].children[0].innerHTML;
+    let notes = row.cells[9].children[0].innerHTML;
+    let id = row.cells[10].children[0].innerHTML;
 
     if (parseInt(number)) {number = parseInt(number);}
     if (parseInt(rating)) {rating = parseInt(rating);}
@@ -32,7 +32,7 @@ function getValsFromRow(row) {
 }
 
 function setRowValue(row, col, val) {
-    cols_to_indices = {'number': 0,
+    const cols_to_indices = {'number': 0,
                        'country': 1,
                        'title': 2,
                        'url': 2,
@@ -44,7 +44,7 @@ function setRowValue(row, col, val) {
                        'date_modified': 8,
                        'notes': 9,
                        'id': 10}
-    index = cols_to_indices[col];
+    const index = cols_to_indices[col];
     if (index != 2) {
         row.cells[index].children[0].innerHTML = val;
         return;
@@ -63,7 +63,7 @@ function setRowValue(row, col, val) {
 }
 
 function indexToCol(index) {
-    cols_to_indices = {'number': 0,
+    const cols_to_indices = {'number': 0,
                        'country': 1,
                        'title': 2,
                        'url': 2,
