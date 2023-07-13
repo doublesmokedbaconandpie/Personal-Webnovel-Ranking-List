@@ -16,11 +16,13 @@ function sortRows(evt) {
     const colName = indexToCol(index);
 
     newRows = mergeSort(newRows, mult, colName);
-    
+    newRows.forEach(function(row, i) {
+        setRowValue(row, 'number', `${i + 1}.`)
+    })
+
     rows.forEach(row => {
         tableBody.removeChild(row);
     });
-
     newRows.forEach(row => {
         tableBody.appendChild(row);
     });
@@ -43,10 +45,12 @@ function merge(left, right, mult, colName)
 {
     var result = [];
     var noSwap;
+    var i = 0;
+    var j = 0;
 
-    while (left.length && right.length) {
-        const cellA = getValsFromRow(left[0])[colName];
-        const cellB = getValsFromRow(right[0])[colName];
+    while (i < left.length && j < right.length) {
+        const cellA = getValsFromRow(left[i])[colName];
+        const cellB = getValsFromRow(right[j])[colName];
         if (cellA <= cellB) {noSwap = 1 * mult;} 
         else {noSwap = -1 * mult;}
 
@@ -58,15 +62,20 @@ function merge(left, right, mult, colName)
             else {noSwap = -1 * mult;}
         }
 
-        console.log(cellA, cellB, cellA <= cellB, cellB < cellA, noSwap, mult)
-
         if (noSwap == 1) {
-            result.push(left.shift());}
-        else {result.push(right.shift());}
+            result.push(left[i]);
+            i += 1;}
+        else {
+            result.push(right[j]);
+            j += 1;}
     }
 
-    while (left.length) {result.push(left.shift())};
-    while (right.length) {result.push(right.shift())};
+    while (i < left.length) {
+        result.push(left[i]);
+        i += 1;};
+    while (j < right.length) {
+        result.push(right[j]);
+        j += 1;};
 
     return result;
 }
@@ -74,7 +83,6 @@ function merge(left, right, mult, colName)
 function getMultIndexfromCol(col, headers) {
     var mult;
     class_names = col.getAttribute('class');
-    console.log(class_names);
     if (class_names.includes("sortnone") || class_names.includes("sortneg")) {mult = 1;}
     else if (class_names.includes('sortpos')) {mult = -1;}
     else {mult = 0;}
