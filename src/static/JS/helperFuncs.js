@@ -16,7 +16,6 @@ function getValsFromRow(row) {
     if (parseInt(number)) {number = parseInt(number);}
     if (parseInt(rating)) {rating = parseInt(rating);}
     if (parseInt(chapters_completed)) {chapters_completed = parseInt(chapters_completed);}
-    console.log(chapters_completed);
 
     return {'number': number,
             'country': country,
@@ -45,7 +44,6 @@ function setRowValue(row, col, val) {
                        'date_modified': 8,
                        'notes': 9,
                        'id': 10}
-    console.log(col in cols_to_indices, col);
     index = cols_to_indices[col];
     if (index != 2) {
         row.cells[index].children[0].innerHTML = val;
