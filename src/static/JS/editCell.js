@@ -1,6 +1,6 @@
-document.querySelectorAll('td')
+document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('blur', saveEditCell));
-document.querySelectorAll('td')
+document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('keydown', keydownListener));
 
 
@@ -13,7 +13,7 @@ async function keydownListener(evt){
         evt.stopPropagation();
         if (evt.target.parentElement.className != 'col2'){return;}
         if (evt.target.parentElement.children[2] == evt.target){return;}
-        editLinkCell(evt);
+        await editLinkCell(evt);
     }
 }
 
@@ -145,9 +145,7 @@ function getCurrDate() {
     return `${year}-${month}-${day}`;
 }
 
-// delete rows
 // edit history
-// sort
 // find
 // UI touches
 // On focus extend row

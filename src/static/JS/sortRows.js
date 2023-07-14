@@ -2,9 +2,9 @@
 document.querySelectorAll('.headcol')
         .forEach(e => e.addEventListener('click', sortRows));
 document.querySelector('.headcol.col4').click();
-document.querySelector('.headcol.col4').click();
 
 function sortRows(evt) {
+    console.log("sort Rows");
     const headers = evt.target.parentElement;
     const table = document.getElementById("NovelTable");
     const tableBody = table.querySelector('tbody');
