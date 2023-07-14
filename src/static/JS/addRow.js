@@ -1,7 +1,6 @@
-var Max_ID = getMaxId();
 
-document.getElementById("addRow")
-        .addEventListener("click", addRowClick);
+document.querySelectorAll(".addRow")
+        .forEach(e => e.addEventListener('click', addRowClick));
 
 function addRowClick() {
     const table = document.getElementById("NovelTable");
@@ -24,7 +23,6 @@ function addRowClick() {
             continue;}
         if (i == 11) {
             createCellDelete(row.insertCell(i));
-            Max_ID += 1;
             continue;}
         createCell(row.insertCell(i), "", `col${i}`, true);
     }
@@ -70,7 +68,7 @@ function createCellDelete(cell) {
     let div = document.createElement('div');
     let button = document.createElement('button');
     button.setAttribute('class', 'deleteRow');
-    button.innerHTML = 'Delete Row';
+    button.innerHTML = 'Delete';
     button.addEventListener('click', deleteRowbutton);
     div.appendChild(button);
 
@@ -87,10 +85,4 @@ function checkLastRowEmpty(table){
         if (value != '') {return false;}
     }
     return true;
-}
-
-function getMaxId() {
-    const table = document.getElementById("NovelTable");
-    const last_row = table.rows[table.rows.length - 1];
-    return parseInt(getValsFromRow(last_row)['id']);
 }
