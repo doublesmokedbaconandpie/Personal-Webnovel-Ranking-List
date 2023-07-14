@@ -1,3 +1,10 @@
+var Max_ID = getMaxId();
+
+function getMaxId() {
+    const table = document.getElementById("NovelTable");
+    const last_row = table.rows[table.rows.length - 1];
+    return parseInt(getValsFromRow(last_row)['id']);
+}
 
 function getValsFromRow(row) {
     let number = row.cells[0].children[0].innerHTML;

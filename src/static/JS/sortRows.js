@@ -2,7 +2,6 @@
 document.querySelectorAll('.headcol')
         .forEach(e => e.addEventListener('click', sortRows));
 document.querySelector('.headcol.col4').click();
-document.querySelector('.headcol.col4').click();
 
 function sortRows(evt) {
     const headers = evt.target.parentElement;

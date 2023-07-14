@@ -7,9 +7,15 @@ body {
 table {
     width: 90%;
     border: solid 2px black;
+    border-spacing: 0px;
     padding: 0px;
     table-layout: fixed;
     text-align: center;
+}
+
+table th, table td {
+    border: solid 1px black;
+    margin: 0px;
 }
 
 .scrollable {
