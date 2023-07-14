@@ -9,6 +9,7 @@ table {
     border: solid 2px black;
     border-spacing: 0px;
     padding: 0px;
+    margin-bottom: 25px;
     table-layout: fixed;
     text-align: center;
 }
@@ -25,6 +26,18 @@ table th, table td {
 
 .headcol:hover {
     cursor: grab;
+}
+
+#FindTableLabel {
+    font-size: x-large;
+    width: 90%;
+    text-align: center;
+    border: solid 1px black;
+    background-color: rgb(144, 142, 142);
+}
+
+.FindRow {
+    height: 50px;
 }
 
 #addRow {
@@ -115,4 +128,11 @@ table th, table td {
     color: white;
     display: block;
     translate: 0% 50%;
+}
+
+
+.notFound0, .notFound1, .notFound2, .notFound3, .notFound4, .notFound5, .notFound6, 
+.notFound7, .notFound8, .notFound9, .notFound10 .notFound11
+ {
+    display: none;
 }

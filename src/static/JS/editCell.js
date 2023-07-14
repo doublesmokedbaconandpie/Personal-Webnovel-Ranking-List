@@ -1,6 +1,6 @@
-document.querySelectorAll('td')
+document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('blur', saveEditCell));
-document.querySelectorAll('td')
+document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('keydown', keydownListener));
 
 

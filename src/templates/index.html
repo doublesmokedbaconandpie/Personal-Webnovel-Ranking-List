@@ -7,7 +7,39 @@
         <link rel="stylesheet" href="static/CSS/style.css">
     </head>
     <body>
-        <input id="addRow" type="button" value="Add row">
+        <input id="addRow" type="button" value="Add row">   
+        <table id="FindTable"> 
+            <div id = "FindTableLabel">Search Bars:</div>
+            <colgroup>
+                <col style = "width:5%">
+                <col style = "width:5%">
+                <col style = "width:14%">
+                <col style = "width:8%">
+                <col style = "width:7%">
+                <col style = "width:5%">
+                <col style = "width:14%">
+                <col style = "width:14%">
+                <col style = "width:10%">
+                <col style = "width:13%">
+                <col>
+            </colgroup>
+            <tbody>
+                <tr id="FindRow">
+                    <td contenteditable = 'true' class = "col0"></td>
+                    <td contenteditable = 'true' class = "col1"></td>
+                    <td contenteditable = 'true' class = "col2"></td>
+                    <td contenteditable = 'true' class = "col3"></td>
+                    <td contenteditable = 'true' class = "col4"></td>
+                    <td contenteditable = 'true' class = "col5"></td>
+                    <td contenteditable = 'true' class = "col6"></td>
+                    <td contenteditable = 'true' class = "col7"></td>
+                    <td contenteditable = 'true' class = "col8"></td>
+                    <td contenteditable = 'true' class = "col9"></td>
+                    <td contenteditable = 'true' class = "col10"></td> 
+                    <td contenteditable = 'true' class = "col11"></td> 
+                </tr>
+            </tbody>
+        </table>    
         <table id="NovelTable">
             <colgroup>
                 <col style = "width:5%">
@@ -19,11 +51,11 @@
                 <col style = "width:14%">
                 <col style = "width:14%">
                 <col style = "width:10%">
-                <col style = "width:14%">
+                <col style = "width:13%">
                 <col>
             </colgroup>
             <thead>
-                <tr class="HeaderRow">
+                <tr id="HeaderRow">
                     <th class = "col0">#</th>
                     <th class = "col1 headcol sortnone">Country</th>
                     <th class = "col2 headcol sortnone">Title</th>
@@ -39,18 +71,6 @@
                 </tr>
             </thead>
             <tbody>
-                <th contenteditable="true" class = "col0 find"></th>
-                <th contenteditable="true" class = "col1 find"></th>
-                <th contenteditable="true" class = "col2 find"></th>
-                <th contenteditable="true" class = "col3 find"></th>
-                <th contenteditable="true" class = "col4 find"></th>
-                <th contenteditable="true" class = "col5 find"></th>
-                <th contenteditable="true" class = "col6 find"></th>
-                <th contenteditable="true" class = "col7 find"></th>
-                <th contenteditable="true" class = "col8 find"></th>
-                <th contenteditable="true" class = "col9 find"></th>
-                <th contenteditable="true" class = "col10 find"></th> 
-                <th contenteditable="true" class = "col11 find"></th>
                 {% for entry in entries%}
                 <tr class = "dataRow">
                     <td class = "col0"><div class = "scrollable">{{entry.number}}</div></td>
@@ -73,6 +93,7 @@
                 </tr>
                 {% endfor %}
             </tbody>
+        </table>
     </body>
     <script src="static/JS/helperFuncs.js"></script>
     <script src="static/JS/addRow.js"></script>
