@@ -367,8 +367,8 @@ class IDTracker:
             f.write(str(val))
             
     def generate_new_ID(self) -> int:
-        logging.info(f'generate_new_ID')
         self.set_max_ID(self.max_ID + 1)
+        logging.info(f'generate_new_ID: id {self.max_ID}')
         return self.max_ID
     
 if __name__ == "__main__":
