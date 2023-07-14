@@ -21,7 +21,7 @@ def index():
     return render_template('index.html', title_name = table_name, entries = entries)
 
 @app.route('/editCell', methods=['POST', 'GET'])
-def saveEditCell():
+def editCell():
     if request.method == 'POST':
         logging.info('Post request for editCell')
         db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
@@ -83,9 +83,9 @@ def fetchScrapedRow():
                 'date_modified': data.date_modified,
                 'id': data.id} 
 
-@app.route('/deleteRow', methods=['POST'])
+@app.route('/deleteRow', methods=['DELETE'])
 def deleteRow():
-    if request.method == 'POST':
+    if request.method == 'DELETE':
         logging.info('Post request for deleteRow')
         db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
         table_name = 'Webnovels'
