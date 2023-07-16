@@ -16,9 +16,11 @@ function sortRows(evt) {
     const index = tmp['index'];
     const colName = indexToCol(index);
 
+    let i = 0
     newRows = mergeSort(newRows, mult, colName);
-    newRows.forEach(function(row, i) {
-        setRowValue(row, 'number', `${i + 1}.`);
+    newRows.forEach(function(row) {
+        if (!row.className.includes("notFound")) {i += 1;}
+        setRowValue(row, 'number', `${i}.`);
     });
 
     rows.forEach(row => {
