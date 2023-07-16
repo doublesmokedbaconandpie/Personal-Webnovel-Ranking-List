@@ -48,12 +48,10 @@ function merge(left, right, mult, colName)
 {
     const result = [];
     let noSwap;
-    let i = 0;
-    let j = 0;
 
-    while (i < left.length && j < right.length) {
-        const cellA = getValsFromRow(left[i])[colName];
-        const cellB = getValsFromRow(right[j])[colName];
+    while (left.length && right.length) {
+        const cellA = getValsFromRow(left[0])[colName];
+        const cellB = getValsFromRow(right[0])[colName];
         if (cellA <= cellB) {noSwap = 1 * mult;} 
         else {noSwap = -1 * mult;}
 
@@ -66,19 +64,12 @@ function merge(left, right, mult, colName)
         }
 
         if (noSwap == 1) {
-            result.push(left[i]);
-            i += 1;}
-        else {
-            result.push(right[j]);
-            j += 1;}
+            result.push(left.shift());}
+        else {result.push(right.shift());}
     }
 
-    while (i < left.length) {
-        result.push(left[i]);
-        i += 1;};
-    while (j < right.length) {
-        result.push(right[j]);
-        j += 1;};
+    while (left.length) {result.push(left.shift())};
+    while (right.length) {result.push(right.shift())};
 
     return result;
 }
