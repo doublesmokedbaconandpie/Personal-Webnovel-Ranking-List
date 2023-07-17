@@ -2,7 +2,15 @@ document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('blur', saveEditCell));
 document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('keydown', keydownListener));
+document.querySelectorAll('#NovelTable td div')
+        .forEach(e => e.addEventListener('blur', titleEditor));
 
+
+async function titleEditor(evt) {
+    new_evt = Object();
+    new_evt.target = evt.target.parentElement;
+    await saveEditCell(new_evt);
+}
 
 async function keydownListener(evt){
     if (evt.key === "Enter" || evt.key == 'Escape') {
@@ -23,10 +31,24 @@ async function editLinkCell(evt) {
 
     const cell = evt.target.parentElement;
     const row = cell.parentElement;
+    addLinkAttributeToTitle(cell);
     const linkText = getValsFromRow(row)['url'];
     const linkEditor = createLinkEditor(linkText);
     cell.appendChild(linkEditor);
     linkEditor.focus();
+}
+
+function addLinkAttributeToTitle(cell) {
+    if (!cell.children[0].querySelector("a")) {
+        for (let i = 0; i < 2; i++) {
+            let currText = cell.children[i].innerHTML;
+            let currDiv = cell.children[i];
+            let origLink = document.createElement('a');
+            origLink.innerHTML = currText;
+            currDiv.innerHTML = "";
+            currDiv.appendChild(origLink);
+        }
+    }     
 }
 
 function createLinkEditor(text) {
@@ -91,20 +113,21 @@ async function retrieveScrapedRow(id, url) {
 }
 
 async function saveEditCell(evt){
+    console.log("%c saveEditCell", "color:pink;")
     const row = evt.target.parentElement;
-    const id = getValsFromRow(row)['id'];
+    const row_vals = getValsFromRow(row)
+    const id = row_vals['id'];
     const new_date_val = getCurrDate();
 
-    let val;
-    let col;
-    for (let i = 0, cell; cell = row.cells[i]; i++) {
+    let val, col, i, cell;
+    for (i = 0, cell; cell = row.cells[i]; i++) {
         if (cell == evt.target) {
-            val = cell.children[0].innerHTML;
             col = row.parentElement.parentElement.rows[0].cells[i].innerHTML;
-            if (val == "<br>") {val = "";}
             break;
         }
     }
+    val = row_vals[indexToCol(i)];
+    console.log(id, col, val, new_date_val)
 
     const send_post = await updateServerUrl(id, col, val, new_date_val);
     if (send_post['result'] == 'true') { 
@@ -113,6 +136,8 @@ async function saveEditCell(evt){
 }
 
 async function updateServerUrl(id, col, val, date_val) {
+    console.log("%c updateServerUrl", "color:purple;")
+    console.log({id, col, val, date_val});  
     const send_post = await fetch(`/editCell`, {
         method: "POST",
         headers: {
@@ -125,9 +150,7 @@ async function updateServerUrl(id, col, val, date_val) {
             date_val: date_val})
         })
         .then(response => response.json());
-
-    console.log("%c updateServerUrl", "color:purple;")
-    console.log({id, col, val, date_val, send_post});  
+        console.log("%c updateServerUrl send_post", "color:purple;", send_post)
     return send_post;
 }
 
@@ -146,8 +169,16 @@ function getCurrDate() {
 }
 
 // edit history
-// find
 // UI touches
 // On focus extend row
 // URL dropdown
 // drag rows?
+
+// Ui touches:
+// fix url dropdown
+// addrow on top adds row on top
+// scrollbar only available on edit
+// chapters completed, average rating
+// fix search bar looks
+// fix add row looks
+// make columns look good

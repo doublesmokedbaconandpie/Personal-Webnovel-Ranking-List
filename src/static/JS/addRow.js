@@ -44,23 +44,16 @@ function createCell(cell, text, class_name, content_editable) {
 
 function createCellTitleUrl(cell) {
     let div1 = document.createElement('div');
-    let txt1 = document.createElement('a');
-    txt1.setAttribute('href', '');
-    div1.appendChild(txt1);
     div1.setAttribute('class', "scrollable");
     div1.setAttribute("contenteditable", "true");
+    div1.addEventListener('blur', titleEditor)
 
     let div2 = document.createElement('div');
-    let txt2 = document.createElement('a');
-    txt2.setAttribute('href', '');
-    div2.appendChild(txt2);
     div2.setAttribute('class', "col2dropdown");
 
     cell.setAttribute("class", "col2");
     cell.appendChild(div1);
     cell.appendChild(div2);
-    cell.addEventListener('keydown', keydownListener);
-    cell.addEventListener('blur', saveEditCell);
     return cell;
 }
 
