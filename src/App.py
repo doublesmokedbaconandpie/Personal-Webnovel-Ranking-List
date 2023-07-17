@@ -20,9 +20,9 @@ def index():
     entries = db.dump_table_to_list()
     return render_template('index.html', title_name = table_name, max_id = db.id_tracker.max_ID, entries = entries)
 
-@app.route('/editCell', methods=['POST', 'GET'])
+@app.route('/editCell', methods=['PUT'])
 def editCell():
-    if request.method == 'POST':
+    if request.method == 'PUT':
         logging.info('Post request for editCell')
         db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
         table_name = 'Webnovels'
