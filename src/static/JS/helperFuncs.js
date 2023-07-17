@@ -9,8 +9,15 @@ function getMaxId() {
 function getValsFromRow(row) {
     let number = row.cells[0].children[0].innerHTML;
     let country = row.cells[1].children[0].innerHTML;
-    let title = row.cells[2].children[0].children[0].innerHTML;
-    let url = row.cells[2].children[0].children[0].getAttribute("href");
+    let title, url;
+    if (row.cells[2].children[0].querySelector("a")) {
+        title = row.cells[2].children[0].children[0].innerHTML;
+        url = row.cells[2].children[0].children[0].getAttribute("href");
+    }
+    else {
+        title = row.cells[2].children[0].innerHTML;
+        url = "";
+    }
     let chapters_completed = row.cells[3].children[0].innerHTML;
     let rating = row.cells[4].children[0].innerHTML
     let reading_status = row.cells[5].children[0].innerHTML;

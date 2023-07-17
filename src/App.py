@@ -30,7 +30,7 @@ def editCell():
         
         post_json = request.get_json()
         id, col, val, date_val = int(post_json['id']), post_json['col'], post_json['val'], post_json['date_val']
-        col_num = NovelEntry.get_col_num(col)
+        col_num = NovelEntry.get_tuple_col_num(col)
         logging.info(f'id: {id}, col: {col}, val: {val}, date_val: {date_val}, col_num: {col_num}')
         
         if id > db.id_tracker.max_ID + 1:
