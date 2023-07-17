@@ -18,7 +18,7 @@ def index():
     db.select_table(table_name)
     
     entries = db.dump_table_to_list()
-    return render_template('index.html', title_name = table_name, entries = entries)
+    return render_template('index.html', title_name = table_name, max_id = db.id_tracker.max_ID, entries = entries)
 
 @app.route('/editCell', methods=['POST', 'GET'])
 def editCell():
@@ -99,7 +99,7 @@ def deleteRow():
         logging.info(f'Delete attempt: {delete_attempt}')
         
         if delete_attempt:
-            return {'result': 'true'}
+            return {'result': 'true', 'max_id': db.id_tracker.max_ID}
         return {'result': 'false', 'error': 'Invalid ID'} 
 
 if __name__ == "__main__":

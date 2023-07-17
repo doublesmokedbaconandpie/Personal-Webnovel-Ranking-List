@@ -28,6 +28,10 @@ table th, table td {
     cursor: grab;
 }
 
+#Max_Id {
+    display: none;
+}
+
 #FindTableLabel {
     font-size: x-large;
     width: 90%;
