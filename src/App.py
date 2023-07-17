@@ -23,13 +23,13 @@ def index():
 @app.route('/editCell', methods=['PUT'])
 def editCell():
     if request.method == 'PUT':
-        logging.info('Post request for editCell')
+        logging.info('PUT request for editCell')
         db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
         table_name = 'Webnovels'
         db.select_table(table_name)
         
-        post_json = request.get_json()
-        id, col, val, date_val = int(post_json['id']), post_json['col'], post_json['val'], post_json['date_val']
+        put_json = request.get_json()
+        id, col, val, date_val = int(put_json['id']), put_json['col'], put_json['val'], put_json['date_val']
         col_num = NovelEntry.get_tuple_col_num(col)
         logging.info(f'id: {id}, col: {col}, val: {val}, date_val: {date_val}, col_num: {col_num}')
         
@@ -50,16 +50,16 @@ def editCell():
         logging.info(f'Date updated: {date_update_success}')
         return {'result': 'true'} 
 
-@app.route('/fetchScrapedRow', methods=['POST'])
+@app.route('/fetchScrapedRow', methods=['PUT'])
 def fetchScrapedRow():
-    if request.method == 'POST':
-        logging.info('Post request for fetchScrapedRow')
+    if request.method == 'PUT':
+        logging.info('PUT request for fetchScrapedRow')
         db = StoreNovelData('App.db', 'NovelCache.db', 'Webnovels')
         table_name = 'Webnovels'
         db.select_table(table_name)
         
-        post_json = request.get_json()
-        url, id = post_json['url'], int(post_json['id'])
+        put_json = request.get_json()
+        url, id = put_json['url'], int(put_json['id'])
         logging.info(f'url: {url}, id: {id}')
         if id > db.id_tracker.max_ID + 1:
             return {'result': 'false', 'error': 'Invalid ID'} 
@@ -91,8 +91,8 @@ def deleteRow():
         table_name = 'Webnovels'
         db.select_table(table_name)
         
-        post_json = request.get_json()
-        id = int(post_json['id'])
+        put_json = request.get_json()
+        id = int(put_json['id'])
         logging.info(f'id: {id}')
         
         delete_attempt = db.delete_entry('ID', id)
