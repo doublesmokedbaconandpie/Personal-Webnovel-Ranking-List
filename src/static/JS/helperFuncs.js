@@ -11,7 +11,6 @@ function getValsFromRow(row) {
     let country = row.cells[1].children[0].innerHTML;
     let title, url;
     if (row.cells[2].children[0].querySelector("a")) {
-        console.log(row.cells[2].children[0].children, row.cells[2].children[0].innerHTML);
         title = row.cells[2].children[0].children[0].innerHTML;
         url = row.cells[2].children[0].children[0].getAttribute("href");
     }

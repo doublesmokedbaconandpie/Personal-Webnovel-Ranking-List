@@ -1,10 +1,17 @@
 document.querySelectorAll('#NovelTable td')
         .forEach(e => e.addEventListener('blur', saveEditCell));
 document.querySelectorAll('#NovelTable td')
-        .forEach(e => e.addEventListener('keydown', keydownListener));
+        .forEach(e => e.addEventListener('keydown', cellKeyDown));
 document.querySelectorAll('#NovelTable td div')
         .forEach(e => e.addEventListener('blur', titleEditor));
+document.querySelectorAll('#NovelTable td div')
+        .forEach(e => e.addEventListener('keydown', titleKeyDown));
 
+function titleKeyDown(evt) {
+    if (evt.key === "Enter" || evt.key == 'Escape') {
+        evt.target.blur();
+    }
+}
 
 async function titleEditor(evt) {
     new_evt = Object();
@@ -12,7 +19,7 @@ async function titleEditor(evt) {
     await saveEditCell(new_evt);
 }
 
-async function keydownListener(evt){
+async function cellKeyDown(evt){
     if (evt.key === "Enter" || evt.key == 'Escape') {
         evt.target.blur();
     }
@@ -115,7 +122,8 @@ async function retrieveScrapedRow(id, url) {
 async function saveEditCell(evt){
     console.log("%c saveEditCell", "color:pink;")
     const row = evt.target.parentElement;
-    const row_vals = getValsFromRow(row)
+    const row_vals = getValsFromRow(row);
+    console.log(row_vals);
     const id = row_vals['id'];
     const new_date_val = getCurrDate();
 
@@ -127,7 +135,6 @@ async function saveEditCell(evt){
         }
     }
     val = row_vals[indexToCol(i)];
-    console.log(id, col, val, new_date_val)
 
     const send_post = await updateServerUrl(id, col, val, new_date_val);
     if (send_post['result'] == 'true') { 
@@ -182,3 +189,5 @@ function getCurrDate() {
 // fix search bar looks
 // fix add row looks
 // make columns look good
+
+// fix maxid
