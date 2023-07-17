@@ -104,7 +104,7 @@ async function exitLinkEditor(evt) {
 async function retrieveScrapedRow(id, url) {
     console.log(`Sending id ${id} and url ${url}`);
     const send_get = await fetch(`/fetchScrapedRow`, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
@@ -146,7 +146,7 @@ async function updateServerUrl(id, col, val, date_val) {
     console.log("%c updateServerUrl", "color:purple;")
     console.log({id, col, val, date_val});  
     const send_post = await fetch(`/editCell`, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json",
         },
