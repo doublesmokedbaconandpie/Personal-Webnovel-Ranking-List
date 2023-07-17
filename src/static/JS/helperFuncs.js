@@ -1,7 +1,7 @@
 var Max_ID = getMaxId();
 
 function getMaxId() {
-    const div = document.getElementById("max_id");
+    const div = document.getElementById("Max_Id");
     return parseInt(div.innerHTML);
 }
 

@@ -28,7 +28,7 @@ table th, table td {
     cursor: grab;
 }
 
-#IDTracker {
+#Max_Id {
     display: none;
 }
 
