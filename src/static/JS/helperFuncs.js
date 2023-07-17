@@ -1,9 +1,8 @@
 var Max_ID = getMaxId();
 
 function getMaxId() {
-    const table = document.getElementById("NovelTable");
-    const last_row = table.rows[table.rows.length - 1];
-    return parseInt(getValsFromRow(last_row)['id']);
+    const div = document.getElementById("max_id");
+    return parseInt(div.innerHTML);
 }
 
 function getValsFromRow(row) {

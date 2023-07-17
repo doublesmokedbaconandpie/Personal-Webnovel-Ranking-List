@@ -23,5 +23,6 @@ async function updateServerDeleteRow(row) {
 
     console.log("%c updateServerDeleteRow", "color:red;")
     console.log({id, send_post});  
+    Max_ID = send_post['max_id']
     return send_post;
 }

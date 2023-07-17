@@ -28,6 +28,10 @@ table th, table td {
     cursor: grab;
 }
 
+#IDTracker {
+    display: none;
+}
+
 #FindTableLabel {
     font-size: x-large;
     width: 90%;
