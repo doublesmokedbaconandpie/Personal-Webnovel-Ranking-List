@@ -47,12 +47,12 @@ class NovelEntry:
         
     @staticmethod
     def is_valid_col(col):
-        valid_cols = ['Country', 'Title','Url','Chapters Completed','Rating (Out of 10)','Reading Status', 'Genre','Tags','Date Modified','Notes']
+        valid_cols = ['Url', 'Country','Title','Chapters Completed','Rating (Out of 10)','Reading Status', 'Genre','Tags','Date Modified','Notes', 'ID']
         return col in valid_cols
         
     @staticmethod
-    def get_col_num(col) -> int:
-        valid_cols = ['Country', 'Title','Url','Chapters Completed','Rating (Out of 10)','Reading Status', 'Genre','Tags','Date Modified','Notes']
+    def get_tuple_col_num(col) -> int:
+        valid_cols = ['Url', 'Country','Title','Chapters Completed','Rating (Out of 10)','Reading Status', 'Genre','Tags','Date Modified','Notes', 'ID']
         if col not in valid_cols:
             return -1
         return valid_cols.index(col)
