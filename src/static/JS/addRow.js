@@ -1,8 +1,8 @@
+import { getMaxId, setMaxId, getValsFromRow } from "./helperFuncs.js";
+import { cellKeyDown, saveEditCell, titleEditor, titleKeyDown } from "./editCell.js";
+import { deleteRowbutton } from "./deleteRow.js";
 
-document.querySelectorAll(".addRow")
-        .forEach(e => e.addEventListener('click', addRowClick));
-
-function addRowClick() {
+export function addRowClick() {
     const table = document.getElementById("NovelTable");
     if (checkLastRowEmpty(table)) {return;}
     let row = table.insertRow(table.rows.length);
@@ -18,8 +18,9 @@ function addRowClick() {
             createCell(row.insertCell(i), "", 'col8', false);
             continue;}
         if (i == 10) {
-            createCell(row.insertCell(i), Max_ID + 1, 'col10', false);
-            Max_ID += 1;
+            const currId = getMaxId()
+            createCell(row.insertCell(i), currId + 1, 'col10', false);
+            setMaxId(currId + 1);
             continue;}
         if (i == 11) {
             createCellDelete(row.insertCell(i));

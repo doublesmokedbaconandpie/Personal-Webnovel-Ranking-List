@@ -1,9 +1,6 @@
-// choose column to go sort with 
-document.querySelectorAll('.headcol')
-        .forEach(e => e.addEventListener('click', sortRows));
-document.querySelector('.headcol.col4').click();
+import { getValsFromRow, setRowValue, indexToCol } from "./helperFuncs.js";
 
-function sortRows(evt) {
+export function sortRows(evt) {
     console.log("sort Rows");
     const headers = evt.target.parentElement;
     const table = document.getElementById("NovelTable");
@@ -76,7 +73,7 @@ function merge(left, right, mult, colName)
 
 function getMultIndexfromCol(col, headers) {
     let mult;
-    class_names = col.getAttribute('class');
+    let class_names = col.getAttribute('class');
     if (class_names.includes("sortnone") || class_names.includes("sortneg")) {mult = 1;}
     else if (class_names.includes('sortpos')) {mult = -1;}
     else {mult = 0;}
@@ -95,7 +92,7 @@ function getMultIndexfromCol(col, headers) {
 
 function changeColClassName(col) {
     let origClass, newClass;
-    class_names = col.getAttribute('class');
+    let class_names = col.getAttribute('class');
     if (class_names.includes('sortnone')) {
         origClass = 'sortnone';
         newClass = 'sortpos';}

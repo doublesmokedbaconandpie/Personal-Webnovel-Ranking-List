@@ -1,11 +1,13 @@
-var Max_ID = getMaxId();
-
-function getMaxId() {
+export function getMaxId() {
     const div = document.getElementById("Max_Id");
     return parseInt(div.innerHTML);
 }
 
-function getValsFromRow(row) {
+export function setMaxId(val) {
+    const div = document.getElementById("Max_Id");
+    div.innerHTML = val;}
+
+export function getValsFromRow(row) {
     let number = row.cells[0].children[0].innerHTML;
     let country = row.cells[1].children[0].innerHTML;
     let title, url;
@@ -30,21 +32,29 @@ function getValsFromRow(row) {
     if (parseInt(rating)) {rating = parseInt(rating);}
     if (parseInt(chapters_completed)) {chapters_completed = parseInt(chapters_completed);}
 
-    return {'number': number,
-            'country': country,
-            'title': title,
-            'url': url,
-            'chapters_completed': chapters_completed,
-            'rating': rating,
-            'reading_status': reading_status,
-            'genre': genre,
-            'tags': tags,
-            'date_modified': date_modified,
-            'notes': notes,
-            'id': id};
+    let rowVals = {'number': number,
+                    'country': country,
+                    'title': title,
+                    'url': url,
+                    'chapters_completed': chapters_completed,
+                    'rating': rating,
+                    'reading_status': reading_status,
+                    'genre': genre,
+                    'tags': tags,
+                    'date_modified': date_modified,
+                    'notes': notes,
+                    'id': id};
+
+    for (const column in rowVals) {
+        if (rowVals[column] === "<br>") {
+            rowVals[column] = "";
+        }
+    }
+
+    return rowVals;
 }
 
-function setRowValue(row, col, val) {
+export function setRowValue(row, col, val) {
     const cols_to_indices = {'number': 0,
                        'country': 1,
                        'title': 2,
@@ -75,7 +85,7 @@ function setRowValue(row, col, val) {
     console.log('Something went wrong');
 }
 
-function indexToCol(index) {
+export function indexToCol(index) {
     const cols_to_indices = {'number': 0,
                        'country': 1,
                        'title': 2,

@@ -1,16 +1,12 @@
+import { getValsFromRow, setRowValue, indexToCol } from "./helperFuncs.js";
 
-document.querySelectorAll('#FindRow td')
-        .forEach(e => e.addEventListener('blur', findEntries));
-document.querySelectorAll('#FindRow td')
-        .forEach(e => e.addEventListener('keydown', findListener));
-
-function findListener(evt){
+export function findListener(evt){
     if (evt.key === "Enter" || evt.key == 'Escape') {
         evt.target.blur();
     }
 }
 
-function findEntries(evt) {
+export function findEntries(evt) {
     console.log("Find Entries");
     const search_query = evt.target.innerHTML.toLowerCase();
     const search_index = getFindColIndex(evt.target);
