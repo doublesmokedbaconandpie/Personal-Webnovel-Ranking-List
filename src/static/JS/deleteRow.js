@@ -1,11 +1,10 @@
-document.querySelectorAll('.deleteRow')
-        .forEach(e => e.addEventListener('click', deleteRowbutton));
+import { setMaxId, getValsFromRow} from "./helperFuncs.js";
 
-async function deleteRowbutton(evt) {
+export async function deleteRowbutton(evt) {
     const row = evt.target.parentElement.parentElement.parentElement;
     const tablebody = row.parentElement
     tablebody.removeChild(row);
-    result = await updateServerDeleteRow(row);
+    const result = await updateServerDeleteRow(row);
 }
 
 async function updateServerDeleteRow(row) {
@@ -23,6 +22,6 @@ async function updateServerDeleteRow(row) {
 
     console.log("%c updateServerDeleteRow", "color:red;")
     console.log({id, send_post});  
-    Max_ID = send_post['max_id']
+    setMaxId(send_post['max_id']);
     return send_post;
 }

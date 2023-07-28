@@ -1,25 +1,18 @@
-document.querySelectorAll('#NovelTable td')
-        .forEach(e => e.addEventListener('blur', saveEditCell));
-document.querySelectorAll('#NovelTable td')
-        .forEach(e => e.addEventListener('keydown', cellKeyDown));
-document.querySelectorAll('#NovelTable td div')
-        .forEach(e => e.addEventListener('blur', titleEditor));
-document.querySelectorAll('#NovelTable td div')
-        .forEach(e => e.addEventListener('keydown', titleKeyDown));
+import { getValsFromRow, setRowValue, indexToCol } from "./helperFuncs.js";
 
-function titleKeyDown(evt) {
+export function titleKeyDown(evt) {
     if (evt.key === "Enter" || evt.key == 'Escape') {
         evt.target.blur();
     }
 }
 
-async function titleEditor(evt) {
-    new_evt = Object();
+export async function titleEditor(evt) {
+    const new_evt = Object();
     new_evt.target = evt.target.parentElement;
     await saveEditCell(new_evt);
 }
 
-async function cellKeyDown(evt){
+export async function cellKeyDown(evt){
     if (evt.key === "Enter" || evt.key == 'Escape') {
         evt.target.blur();
     }
@@ -32,7 +25,7 @@ async function cellKeyDown(evt){
     }
 }
 
-async function editLinkCell(evt) {
+export async function editLinkCell(evt) {
     console.log("%c editLinkCell", "color:red;");
     console.log(evt);
 
@@ -119,7 +112,7 @@ async function retrieveScrapedRow(id, url) {
     return send_get;
 }
 
-async function saveEditCell(evt){
+export async function saveEditCell(evt){
     console.log("%c saveEditCell", "color:pink;")
     const row = evt.target.parentElement;
     const row_vals = getValsFromRow(row);
