@@ -11,7 +11,7 @@ Features include but are not limited to:
 * Customizable sorting
 * Filtering by tags and genres
 * Adjustable table sizing
-* Support for other websites besides NovelUpdates
+* Support for webnovels on websites besides NovelUpdates
 
 ## Running This Website
 
