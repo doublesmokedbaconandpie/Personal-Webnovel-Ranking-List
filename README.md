@@ -5,6 +5,8 @@
 This application is meant to be a locally run website that allows for easy tracking of translated webnovels that you are currently reading. 
 For most users, [novelupdates.com](https://www.novelupdates.com) is enough, but NovelUpdates can be lacking in functionality for webnovel enthusiats.
 
+As of right now, this is implemented as a locally hosted website, which can be clunky. There are plans to eventually migrate this to a separate application.
+
 ## Features
 Features include but are not limited to:
 * 1-10 rating system instead of 5 stars
